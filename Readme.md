@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Татиана Леонова](https://up.htmlacademy.ru/javascript/20/user/1186661).
-* Наставник: `Неизвестно`.
+* Наставник: [Алексей Балесный](https://up.htmlacademy.ru/javascript/20/user/221665).
 
 ---
 
