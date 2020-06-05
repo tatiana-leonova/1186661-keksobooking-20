@@ -6,20 +6,21 @@ var PHOTO_URL = 'http://o0.github.io/assets/images/tokyo/hotel';
 var PNG_FORMAT = '.png';
 var JPG_FORMAT = '.jpg';
 var OFFER_TITLE = [
-  'Hilton Tokyo 5*',
-  'Tokyo Dome Hotel 4*',
-  'Tokyo Prince Hotel 4*',
-  'Mandarin Oriental Tokyo 5*',
-  'Hotel Villa Fontaine Tokyo-Nihombashi Hakozaki 3*',
-  'Hotel Villa Fontaine Tokyo-Tamachi 3*',
-  'Hotel Villa Fontaine Tokyo-Shiodome 4*',
-  'Comfort Hotel Tokyo Higashi Kanda 3*'
+  'Шикарная квартира в центре',
+  'Уютное гнездышко для молодоженов',
+  'Квартира-студия недалеко от центра',
+  'Элитная хрущевка на окраине',
+  'Скромная квартирка для студентов',
+  'Унылая однокомнатная квартира',
+  'Роскошный дворец  с просторными комнатами',
+  'Частный дом на две семьи'
 ];
 var OFFER_DESCRIPTION = [
-  'Отель расположен близко к центру. Бесплатный Wi-Fi на территории',
-  'К услугам гостей ресторан-буфет и бесплатный Wi-Fi в номере',
-  'Завтрак: шведский стол, на крыше отеля есть бассейн',
-  'Отель расположен близко к центру'];
+  'Бесплатный безлимитный Wi-Fi, рядом торговый центр',
+  'Чистая и уютная квартира. Все достопримечательности Токио рядом.',
+  'Просторная кухня. Лоджия с прекрасным видомна город',
+  'До центра 5 минут. Удобная транспортная развязка'
+];
 var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_CHECK_IN = ['12:00', '13:00', '14:00'];
 var OFFER_CHECK_OUT = ['12:00', '13:00', '14:00'];
@@ -27,9 +28,9 @@ var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'co
 var PRICE_VALUE_MIN = 500;
 var PRICE_VALUE_MAX = 3000;
 var ROOM_VALUE_MIN = 1;
-var ROOM_VALUE_MAX = 3;
+var ROOM_VALUE_MAX = 7;
 var GUEST_VALUE_MIN = 1;
-var GUEST_VALUE_MAX = 3;
+var GUEST_VALUE_MAX = 4;
 var PHOTO_VALUE_MIN = 3;
 var PHOTO_VALUE_MAX = 10;
 var LOCATION_X_MIN = 3;
@@ -37,9 +38,12 @@ var locationXMax = document.querySelector('.map__overlay').clientWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
+var PIN_WIDTH = 50;
+var PIN_HEIGHT = 70;
+
 // Функция для создания массива из 8 сгенерированных JS-объектов
 function generateData() {
-  var array = [];
+  var arrayOffers = [];
   for (var i = 0; i < OFFER_TITLE.length; i++) {
     var object = {};
     var location = {
@@ -65,9 +69,10 @@ function generateData() {
     object.location = {
       location: location
     };
-    array.push(object);
+    arrayOffers.push(object);
   }
-  return JSON.stringify(array);
+  // return JSON.stringify(arrayOffers);
+  return arrayOffers;
 }
 
 // Функция генерации случайных чисел
@@ -96,11 +101,38 @@ function generatePhotos() {
   return array;
 }
 
-var mapSection = document.querySelector('.map');
-mapSection.classList.remove('map--faded');
-
 /* eslint-disable no-console */
 console.log(generateData());
 /* eslint-enable no-console */
 
+// Удаление класса .map--faded у блока .map
+var mapSection = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');
+mapSection.classList.remove('map--faded');
 
+// Нахождение шаблон пина
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+// Генерация пина объявления
+function generateAdvertPin(advertPin) {
+  var elementPin = pinTemplate.cloneNode(true);
+
+  elementPin.style.left = (advertPin.location.x - PIN_WIDTH / 2) + 'px';
+  elementPin.style.top = (advertPin.location.y - PIN_HEIGHT) + 'px';
+
+  elementPin.querySelector('img').src = advertPin.author.avatar;
+  elementPin.querySelector('img').alt = advertPin.offer.title;
+
+  return elementPin;
+}
+
+// Добавление объявлений
+function addAdvert(arrayOffers) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < arrayOffers.length; i++) {
+    fragment.appendChild(generateAdvertPin(arrayOffers[i]));
+  }
+  mapPins.appendChild(fragment);
+}
+
+mapSection.appendChild(addAdvert(generateData(OFFER_TITLE)));
