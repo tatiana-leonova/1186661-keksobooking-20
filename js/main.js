@@ -37,8 +37,6 @@ var locationXMax = document.querySelector('.map__overlay').clientWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 
-// var width = img.clientWidth;
-
 // Функция для создания массива из 8 сгенерированных JS-объектов
 function generateData() {
   var array = [];
@@ -98,7 +96,11 @@ function generatePhotos() {
   return array;
 }
 
+var mapSection = document.querySelector('.map');
+mapSection.classList.remove('map--faded');
+
 /* eslint-disable no-console */
 console.log(generateData());
 /* eslint-enable no-console */
+
 
