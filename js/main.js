@@ -34,12 +34,46 @@ var GUEST_VALUE_MAX = 4;
 var PHOTO_VALUE_MIN = 3;
 var PHOTO_VALUE_MAX = 10;
 var LOCATION_X_MIN = 3;
-var locationXMax = document.querySelector('.map__overlay').clientWidth;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
-
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+
+var locationXMax = document.querySelector('.map__overlay').clientWidth;
+var mapSection = document.querySelector('.map');
+var mapPins = document.querySelector('.map__pins');
+
+// Нахождение шаблон пина
+var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+// Добавление пинов на карту
+mapPins.appendChild(addAdvert(generateData(OFFER_TITLE)));
+
+// Удаление класса .map--faded у блока .map
+mapSection.classList.remove('map--faded');
+
+// Добавление объявлений
+function addAdvert(оffers) {
+  var fragment = document.createDocumentFragment();
+
+  for (var i = 0; i < оffers.length; i++) {
+    fragment.appendChild(generateAdvertPin(оffers[i]));
+  }
+  return fragment;
+}
+
+// Генерация пина объявления
+function generateAdvertPin(advertPin) {
+  var elementPin = pinTemplate.cloneNode(true);
+
+  elementPin.style.left = (advertPin.location.x - PIN_WIDTH / 2) + 'px';
+  elementPin.style.top = (advertPin.location.y - PIN_HEIGHT) + 'px';
+
+  elementPin.querySelector('img').src = advertPin.author.avatar;
+  elementPin.querySelector('img').alt = advertPin.offer.title;
+
+  return elementPin;
+}
 
 // Функция для создания массива из 8 сгенерированных JS-объектов
 function generateData() {
@@ -67,11 +101,11 @@ function generateData() {
       photos: generatePhotos()
     };
     object.location = {
-      location: location
+      x: location.x,
+      y: location.y
     };
     arrayOffers.push(object);
   }
-  // return JSON.stringify(arrayOffers);
   return arrayOffers;
 }
 
@@ -100,39 +134,3 @@ function generatePhotos() {
   }
   return array;
 }
-
-/* eslint-disable no-console */
-console.log(generateData());
-/* eslint-enable no-console */
-
-// Удаление класса .map--faded у блока .map
-var mapSection = document.querySelector('.map');
-var mapPins = document.querySelector('.map__pins');
-mapSection.classList.remove('map--faded');
-
-// Нахождение шаблон пина
-var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-
-// Генерация пина объявления
-function generateAdvertPin(advertPin) {
-  var elementPin = pinTemplate.cloneNode(true);
-
-  elementPin.style.left = (advertPin.location.x - PIN_WIDTH / 2) + 'px';
-  elementPin.style.top = (advertPin.location.y - PIN_HEIGHT) + 'px';
-
-  elementPin.querySelector('img').src = advertPin.author.avatar;
-  elementPin.querySelector('img').alt = advertPin.offer.title;
-
-  return elementPin;
-}
-
-// Добавление объявлений
-function addAdvert(arrayOffers) {
-  var fragment = document.createDocumentFragment();
-  for (var i = 0; i < arrayOffers.length; i++) {
-    fragment.appendChild(generateAdvertPin(arrayOffers[i]));
-  }
-  mapPins.appendChild(fragment);
-}
-
-mapSection.appendChild(addAdvert(generateData(OFFER_TITLE)));
