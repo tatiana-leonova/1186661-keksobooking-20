@@ -5,7 +5,7 @@ var AVATAR_IMG = 'img/avatars/user0';
 var PHOTO_URL = 'http://o0.github.io/assets/images/tokyo/hotel';
 var PNG_FORMAT = '.png';
 var JPG_FORMAT = '.jpg';
-var OFFER_TITLE = [
+var OFFER_TITLES = [
   'Шикарная квартира в центре',
   'Уютное гнездышко для молодоженов',
   'Квартира-студия недалеко от центра',
@@ -15,25 +15,24 @@ var OFFER_TITLE = [
   'Роскошный дворец  с просторными комнатами',
   'Частный дом на две семьи'
 ];
-var OFFER_DESCRIPTION = [
+var OFFER_DESCRIPTIONS = [
   'Бесплатный безлимитный Wi-Fi, рядом торговый центр',
   'Чистая и уютная квартира. Все достопримечательности Токио рядом.',
   'Просторная кухня. Лоджия с прекрасным видомна город',
   'До центра 5 минут. Удобная транспортная развязка'
 ];
-var OFFER_TYPE = ['palace', 'flat', 'house', 'bungalo'];
-var OFFER_CHECK_IN = ['12:00', '13:00', '14:00'];
-var OFFER_CHECK_OUT = ['12:00', '13:00', '14:00'];
+var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
+var OFFER_CHECK_INS = ['12:00', '13:00', '14:00'];
+var OFFER_CHECK_OUTS = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var PRICE_VALUE_MIN = 500;
-var PRICE_VALUE_MAX = 3000;
-var ROOM_VALUE_MIN = 1;
-var ROOM_VALUE_MAX = 7;
-var GUEST_VALUE_MIN = 1;
-var GUEST_VALUE_MAX = 4;
+var PRICE_VALUE_MIN = 0;
+var PRICE_VALUE_MAX = 1000000;
+var OFFER_ROOMS = [1, 2, 3, 100];
+var GUEST_VALUE_MIN = 0;
+var GUEST_VALUE_MAX = 3;
 var PHOTO_VALUE_MIN = 3;
 var PHOTO_VALUE_MAX = 10;
-var LOCATION_X_MIN = 3;
+var LOCATION_X_MIN = 0;
 var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var PIN_WIDTH = 50;
@@ -47,7 +46,7 @@ var mapPins = document.querySelector('.map__pins');
 var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
 
 // Добавление пинов на карту
-mapPins.appendChild(addAdvert(generateData(OFFER_TITLE)));
+mapPins.appendChild(addAdvert(generateData(OFFER_TITLES.length)));
 
 // Удаление класса .map--faded у блока .map
 mapSection.classList.remove('map--faded');
@@ -76,9 +75,9 @@ function generateAdvertPin(advertPin) {
 }
 
 // Функция для создания массива из 8 сгенерированных JS-объектов
-function generateData() {
-  var arrayOffers = [];
-  for (var i = 0; i < OFFER_TITLE.length; i++) {
+function generateData(countOfTitles) {
+  var offers = [];
+  for (var i = 0; i < countOfTitles; i++) {
     var object = {};
     var location = {
       x: generateRandomValue(LOCATION_X_MIN, locationXMax),
@@ -88,26 +87,30 @@ function generateData() {
       avatar: AVATAR_IMG + (i + 1) + PNG_FORMAT
     };
     object.offer = {
-      title: OFFER_TITLE[i],
+      title: OFFER_TITLES[i],
       address: location.x + ', ' + location.y,
       price: generateRandomValue(PRICE_VALUE_MIN, PRICE_VALUE_MAX),
-      type: getRandomInArray(OFFER_TYPE),
-      rooms: generateRandomValue(ROOM_VALUE_MIN, ROOM_VALUE_MAX),
+      type: getRandomElement(OFFER_TYPES),
+      rooms: getRandomElement(OFFER_ROOMS),
       guests: generateRandomValue(GUEST_VALUE_MIN, GUEST_VALUE_MAX),
-      checkin: getRandomInArray(OFFER_CHECK_IN),
-      checkout: getRandomInArray(OFFER_CHECK_OUT),
+      checkin: getRandomElement(OFFER_CHECK_INS),
+      checkout: getRandomElement(OFFER_CHECK_OUTS),
       features: sliceArray(OFFER_FEATURES),
-      description: getRandomInArray(OFFER_DESCRIPTION),
+      description: getRandomElement(OFFER_DESCRIPTIONS),
       photos: generatePhotos()
     };
     object.location = {
       x: location.x,
       y: location.y
     };
-    arrayOffers.push(object);
+    offers.push(object);
   }
-  return arrayOffers;
+  return offers;
 }
+
+/* eslint-disable no-console */
+// console.log(generateData(OFFER_TITLES.length));
+/* eslint-enable no-console */
 
 // Функция генерации случайных чисел
 function generateRandomValue(min, max) {
@@ -115,8 +118,8 @@ function generateRandomValue(min, max) {
 }
 
 // Функция генерации случайного значения из массива
-function getRandomInArray(array) {
-  return array[generateRandomValue(0, array.length)];
+function getRandomElement(elements) {
+  return elements[generateRandomValue(0, elements.length)];
 }
 
 // Функция генерации случайной длины массива
@@ -126,11 +129,11 @@ function sliceArray(array) {
 
 // Функция генерации массива строк случайной длины, содержащий адреса фотографий
 function generatePhotos() {
-  var array = [];
+  var photos = [];
   var lastValue = generateRandomValue(PHOTO_VALUE_MIN, PHOTO_VALUE_MAX);
   for (var i = 0; i < lastValue; i++) {
     var photo = PHOTO_URL + (i + 1) + JPG_FORMAT;
-    array.push(photo);
+    photos.push(photo);
   }
-  return array;
+  return photos;
 }
