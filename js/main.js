@@ -1,4 +1,3 @@
-
 'use strict';
 
 var AVATAR_IMG = 'img/avatars/user0';
@@ -21,12 +20,12 @@ var OFFER_DESCRIPTIONS = [
   'Просторная кухня. Лоджия с прекрасным видом на город',
   'До центра 5 минут. Удобная транспортная развязка'
 ];
-// var OFFER_TYPES = ['palace', 'flat', 'house', 'bungalo'];
 var OFFER_TYPES = {
   'palace': 'Дворец',
   'flat': 'Квартира',
   'house': 'Дом',
   'bungalo': 'Бунгало'};
+
 var OFFER_CHECK_INS = ['12:00', '13:00', '14:00'];
 var OFFER_CHECK_OUTS = ['12:00', '13:00', '14:00'];
 var OFFER_FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -42,8 +41,8 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var IMG_WIDTH = 45;
-var IMG_HEIGHT = 40;
+// var IMG_WIDTH = 45; Временные комменты кода
+// var IMG_HEIGHT = 40; Временные комменты кода
 
 var locationXMax = document.querySelector('.map__overlay').clientWidth;
 var mapSection = document.querySelector('.map');
@@ -57,9 +56,6 @@ var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pi
 
 // Добавление пинов на карту
 // mapPins.appendChild(addAdvert(generatedOffers));
-
-// Удаление класса .map--faded у блока .map
-mapSection.classList.remove('map--faded');
 
 // Добавление пина объявлений
 function addAdvert(оffers) {
@@ -147,7 +143,7 @@ function generatePhotos() {
 }
 
 
-// БОЛЬШЕ ДЕТАЛЕЙ (ЧАСТЬ 2)
+// БОЛЬШЕ ДЕТАЛЕЙ (ЧАСТЬ 2) Временные комменты кода
 
 // var templateCard = document.querySelector('#card').content.querySelector('.map__card');
 // var mapFiltersContainer = document.querySelector('.map__filters-container');
@@ -239,33 +235,73 @@ function generatePhotos() {
 // }
 
 // ДОВЕРЯЙ, НО ПРОВЕРЯЙ (ЧАСТЬ 1)
+var mapPinMain = document.querySelector('.map__pin--main');
+var adForm = document.querySelector('.ad-form');
+var RoomSelectAdForm = adForm.querySelector('select[name="rooms"]');
+var CapacitySelectAdForm = adForm.querySelector('select[name="capacity"]');
+var TitleInputAdForm = adForm.querySelector('input[name="title"]');
+
+var countOfPlacesInRoom = {
+  1: {
+    capacity: ['1'],
+    error: 'В 1 комнате может находиться 1 гость. Измените выбранные параметры'
+  },
+  2: {
+    capacity: ['1', '2'],
+    error: 'В 2 комнатах могут находиться 1 или 2 гостя. Измените выбранные параметры'
+  },
+  3: {
+    capacity: ['1', '2', '3'],
+    error: 'В 3 комнатах могут находиться от 1 до 3 гостей. Измените выбранные параметры'
+  },
+  100: {
+    capacity: ['0'],
+    error: 'Упс! 100 комнат предназначены не для размещения гостей. Измените выбранные параметры'
+  }
+};
+
 deactivatePage(true);
 
-document.querySelector('.map__pin--main').addEventListener('mousedown', function (evt) {
+renderAdress();
+
+mapPinMain.addEventListener('mousedown', function (evt) {
   if (event.which === 1) { // нажатие мышки только на левую кнопку
     activatePage();
   }
   evt.preventDefault();
 });
 
-document.addEventListener('keydown', function (evt) {
+mapPinMain.addEventListener('keydown', function (evt) {
   if (evt.keyCode === 13) { // нажатие клавиши enter
     activatePage();
-    evt.preventDefault();
   }
 });
 
+// Функция для деактивации страницы
 function deactivatePage(isDisabled) {
   disabledElements('.ad-form', 'fieldset', isDisabled);
   disabledElements('.map__filters', 'select', isDisabled);
   disabledElements('.map__filters', 'fieldset', isDisabled);
+
+  TitleInputAdForm.removeEventListener('change', validateTitle);
+  RoomSelectAdForm.removeEventListener('change', validateRoom);
+  CapacitySelectAdForm.removeEventListener('change', validateRoom);
 }
 
+// Функция для активации страницы
 function activatePage() {
   mapPins.appendChild(addAdvert(generatedOffers));
   deactivatePage(false);
+
+  TitleInputAdForm.addEventListener('change', validateTitle);
+  RoomSelectAdForm.addEventListener('change', validateRoom);
+  CapacitySelectAdForm.addEventListener('change', validateRoom);
+  validateRoom();
+
+  mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
 }
 
+// Функция для добавления disabled элементам
 function disabledElements(parent, children, isDisabled) {
   var parentElement = document.querySelector(parent);
   var childElements = parentElement.querySelectorAll(children);
@@ -274,6 +310,37 @@ function disabledElements(parent, children, isDisabled) {
   });
 }
 
+function renderAdress() {
+  var addressInputForm = document.querySelector('input[name="address"]');
+  addressInputForm.value = getPisitionPin(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
+}
 
-// vbghgf
+// Функция для получения позиции пина
+function getPisitionPin(pin, pinWidth, pinHeight) {
+  var positionX = Math.round(pin.offsetLeft + pinWidth / 2);
+  var positionY = pin.offsetTop - pinHeight / 2;
+  return positionX + ', ' + positionY;
+}
+
+// Функция для валидации комнат
+function validateRoom() {
+  var room = countOfPlacesInRoom[RoomSelectAdForm.value];
+  if (!room.capacity.includes(CapacitySelectAdForm.value)) {
+    RoomSelectAdForm.setCustomValidity(room.error);
+  } else {
+    RoomSelectAdForm.setCustomValidity('');
+  }
+}
+
+function validateTitle() {
+  if (TitleInputAdForm.validity.tooShort) {
+    TitleInputAdForm.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
+  } else if (TitleInputAdForm.validity.tooLong) {
+    TitleInputAdForm.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (TitleInputAdForm.validity.valueMissing) {
+    TitleInputAdForm.setCustomValidity('Обязательное поле');
+  } else {
+    TitleInputAdForm.setCustomValidity('');
+  }
+}
 
