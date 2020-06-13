@@ -20,11 +20,30 @@ var OFFER_DESCRIPTIONS = [
   'Просторная кухня. Лоджия с прекрасным видом на город',
   'До центра 5 минут. Удобная транспортная развязка'
 ];
+// var OFFER_TYPES = {
+//   'palace': PALACE,
+//   'flat': FLAT,
+//   'house': HOUSE,
+//   'bungalo': BUNGALO
+// };
 var OFFER_TYPES = {
-  'palace': 'Дворец',
-  'flat': 'Квартира',
-  'house': 'Дом',
-  'bungalo': 'Бунгало'};
+  bungalo: {
+    translate: 'Бунгало',
+    minPrice: 0
+  },
+  flat: {
+    translate: 'Квартира',
+    minPrice: 1000
+  },
+  house: {
+    translate: 'Дом',
+    minPrice: 5000
+  },
+  palace: {
+    translate: 'Дворец',
+    minPrice: 10000
+  }
+};
 
 var OFFER_CHECK_INS = ['12:00', '13:00', '14:00'];
 var OFFER_CHECK_OUTS = ['12:00', '13:00', '14:00'];
@@ -41,6 +60,8 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
+var PIN_MAIN_WIDTH = 65;
+var PIN_MAIN_HEIGHT = 85;
 // var IMG_WIDTH = 45; Временные комменты кода
 // var IMG_HEIGHT = 40; Временные комменты кода
 
@@ -237,9 +258,11 @@ function generatePhotos() {
 // ДОВЕРЯЙ, НО ПРОВЕРЯЙ (ЧАСТЬ 1)
 var mapPinMain = document.querySelector('.map__pin--main');
 var adForm = document.querySelector('.ad-form');
-var RoomSelectAdForm = adForm.querySelector('select[name="rooms"]');
-var CapacitySelectAdForm = adForm.querySelector('select[name="capacity"]');
-var TitleInputAdForm = adForm.querySelector('input[name="title"]');
+var roomSelectAdForm = adForm.querySelector('select[name="rooms"]');
+var typeHousingSelectAdForm = adForm.querySelector('select[name="type"]');
+var capacitySelectAdForm = adForm.querySelector('select[name="capacity"]');
+var titleInputAdForm = adForm.querySelector('input[name="title"]');
+var priceInputAdForm = adForm.querySelector('input[name="price"]');
 
 var countOfPlacesInRoom = {
   1: {
@@ -283,9 +306,14 @@ function deactivatePage(isDisabled) {
   disabledElements('.map__filters', 'select', isDisabled);
   disabledElements('.map__filters', 'fieldset', isDisabled);
 
-  TitleInputAdForm.removeEventListener('change', validateTitle);
-  RoomSelectAdForm.removeEventListener('change', validateRoom);
-  CapacitySelectAdForm.removeEventListener('change', validateRoom);
+  validateRoom();
+  validatePriceOfNight();
+
+  titleInputAdForm.removeEventListener('change', validateTitle);
+  roomSelectAdForm.removeEventListener('change', validateRoom);
+  capacitySelectAdForm.removeEventListener('change', validateRoom);
+  typeHousingSelectAdForm.removeEventListener('change', validatePriceOfNight);
+
 }
 
 // Функция для активации страницы
@@ -293,12 +321,13 @@ function activatePage() {
   mapPins.appendChild(addAdvert(generatedOffers));
   deactivatePage(false);
 
-  TitleInputAdForm.addEventListener('change', validateTitle);
-  RoomSelectAdForm.addEventListener('change', validateRoom);
-  CapacitySelectAdForm.addEventListener('change', validateRoom);
-  validateRoom();
+  titleInputAdForm.addEventListener('change', validateTitle);
+  roomSelectAdForm.addEventListener('change', validateRoom);
+  capacitySelectAdForm.addEventListener('change', validateRoom);
+  typeHousingSelectAdForm.addEventListener('change', validatePriceOfNight);
 
   mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
+  adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
 }
 
 // Функция для добавления disabled элементам
@@ -310,37 +339,45 @@ function disabledElements(parent, children, isDisabled) {
   });
 }
 
+// Функция для отрисовки адреса
 function renderAdress() {
   var addressInputForm = document.querySelector('input[name="address"]');
-  addressInputForm.value = getPisitionPin(mapPinMain, PIN_WIDTH, PIN_HEIGHT);
+  addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT);
 }
 
 // Функция для получения позиции пина
 function getPisitionPin(pin, pinWidth, pinHeight) {
   var positionX = Math.round(pin.offsetLeft + pinWidth / 2);
-  var positionY = pin.offsetTop - pinHeight / 2;
+  var positionY = Math.round(pin.offsetTop - pinHeight / 2);
   return positionX + ', ' + positionY;
 }
 
 // Функция для валидации комнат
 function validateRoom() {
-  var room = countOfPlacesInRoom[RoomSelectAdForm.value];
-  if (!room.capacity.includes(CapacitySelectAdForm.value)) {
-    RoomSelectAdForm.setCustomValidity(room.error);
+  var room = countOfPlacesInRoom[roomSelectAdForm.value];
+  if (!room.capacity.includes(capacitySelectAdForm.value)) {
+    roomSelectAdForm.setCustomValidity(room.error);
   } else {
-    RoomSelectAdForm.setCustomValidity('');
+    roomSelectAdForm.setCustomValidity('');
   }
 }
 
+// Функция для валидации заголовка
 function validateTitle() {
-  if (TitleInputAdForm.validity.tooShort) {
-    TitleInputAdForm.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
-  } else if (TitleInputAdForm.validity.tooLong) {
-    TitleInputAdForm.setCustomValidity('Заголовок не должен превышать 100 символов');
-  } else if (TitleInputAdForm.validity.valueMissing) {
-    TitleInputAdForm.setCustomValidity('Обязательное поле');
+  if (titleInputAdForm.validity.tooShort) {
+    titleInputAdForm.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
+  } else if (titleInputAdForm.validity.tooLong) {
+    titleInputAdForm.setCustomValidity('Заголовок не должен превышать 100 символов');
+  } else if (titleInputAdForm.validity.valueMissing) {
+    titleInputAdForm.setCustomValidity('Обязательное поле');
   } else {
-    TitleInputAdForm.setCustomValidity('');
+    titleInputAdForm.setCustomValidity('');
   }
 }
 
+// Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
+function validatePriceOfNight() {
+  var type = OFFER_TYPES[typeHousingSelectAdForm.value];
+  priceInputAdForm.placeholder = type.minPrice;
+  priceInputAdForm.min = type.minPrice;
+}
