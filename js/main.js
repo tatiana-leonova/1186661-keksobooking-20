@@ -60,8 +60,9 @@ var LOCATION_Y_MIN = 130;
 var LOCATION_Y_MAX = 630;
 var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
-var PIN_MAIN_WIDTH = 65;
-var PIN_MAIN_HEIGHT = 85;
+var PIN_MAIN_SIZE = 65;
+var PIN_MAIN_HEIGHT_WITH_CORNER = 85;
+// var PIN_MAIN_HEIGHT = 6
 // var IMG_WIDTH = 45; Временные комменты кода
 // var IMG_HEIGHT = 40; Временные комменты кода
 var ENTER_KEY = 'Enter';
@@ -288,8 +289,6 @@ var countOfPlacesInRoom = {
 
 deactivatePage(true);
 
-renderAdress();
-
 mapPinMain.addEventListener('mousedown', function (evt) {
   if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
     activatePage();
@@ -309,6 +308,8 @@ function deactivatePage(isDisabled) {
   disableElements('.map__filters', 'select', isDisabled);
   disableElements('.map__filters', 'fieldset', isDisabled);
 
+  renderAdress(false);
+
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
 
@@ -323,6 +324,8 @@ function deactivatePage(isDisabled) {
 function activatePage() {
   mapPins.appendChild(addAdvert(generatedOffers));
   deactivatePage(false);
+
+  renderAdress(true);
 
   titleInputAdForm.addEventListener('change', onTitleChanged);
   roomSelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
@@ -343,8 +346,12 @@ function disableElements(parent, children, isDisabled) {
 }
 
 // Функция для отрисовки адреса
-function renderAdress() {
-  addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT);
+function renderAdress(isPageActive) {
+  if (isPageActive) {
+    addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
+  } else {
+    addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
+  }
 }
 
 // Функция для получения позиции пина
