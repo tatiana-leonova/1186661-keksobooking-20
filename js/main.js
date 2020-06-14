@@ -64,6 +64,8 @@ var PIN_MAIN_WIDTH = 65;
 var PIN_MAIN_HEIGHT = 85;
 // var IMG_WIDTH = 45; Временные комменты кода
 // var IMG_HEIGHT = 40; Временные комменты кода
+var ENTER_KEY = 'Enter';
+var LEFT_KEY_MOUSE_CODE = 1;
 
 var locationXMax = document.querySelector('.map__overlay').clientWidth;
 var mapSection = document.querySelector('.map');
@@ -288,23 +290,23 @@ deactivatePage(true);
 renderAdress();
 
 mapPinMain.addEventListener('mousedown', function (evt) {
-  if (event.which === 1) { // нажатие мышки только на левую кнопку
+  if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
     activatePage();
   }
   evt.preventDefault();
 });
 
 mapPinMain.addEventListener('keydown', function (evt) {
-  if (evt.keyCode === 13) { // нажатие клавиши enter
+  if (evt.key === ENTER_KEY) { // нажатие клавиши enter
     activatePage();
   }
 });
 
 // Функция для деактивации страницы
 function deactivatePage(isDisabled) {
-  disabledElements('.ad-form', 'fieldset', isDisabled);
-  disabledElements('.map__filters', 'select', isDisabled);
-  disabledElements('.map__filters', 'fieldset', isDisabled);
+  disableElements('.ad-form', 'fieldset', isDisabled);
+  disableElements('.map__filters', 'select', isDisabled);
+  disableElements('.map__filters', 'fieldset', isDisabled);
 
   validateRoom();
   validatePriceOfNight();
@@ -331,7 +333,7 @@ function activatePage() {
 }
 
 // Функция для добавления disabled элементам
-function disabledElements(parent, children, isDisabled) {
+function disableElements(parent, children, isDisabled) {
   var parentElement = document.querySelector(parent);
   var childElements = parentElement.querySelectorAll(children);
   childElements.forEach(function (item) {
