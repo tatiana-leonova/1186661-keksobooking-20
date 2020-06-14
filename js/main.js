@@ -265,6 +265,7 @@ var typeHousingSelectAdForm = adForm.querySelector('select[name="type"]');
 var capacitySelectAdForm = adForm.querySelector('select[name="capacity"]');
 var titleInputAdForm = adForm.querySelector('input[name="title"]');
 var priceInputAdForm = adForm.querySelector('input[name="price"]');
+var addressInputForm = document.querySelector('input[name="address"]');
 
 var countOfPlacesInRoom = {
   1: {
@@ -308,13 +309,13 @@ function deactivatePage(isDisabled) {
   disableElements('.map__filters', 'select', isDisabled);
   disableElements('.map__filters', 'fieldset', isDisabled);
 
-  validateRoom();
-  validatePriceOfNight();
+  onRoomOrCapacityChanged();
+  onTypeHousingChanged();
 
-  titleInputAdForm.removeEventListener('change', validateTitle);
-  roomSelectAdForm.removeEventListener('change', validateRoom);
-  capacitySelectAdForm.removeEventListener('change', validateRoom);
-  typeHousingSelectAdForm.removeEventListener('change', validatePriceOfNight);
+  titleInputAdForm.removeEventListener('change', onTitleChanged);
+  roomSelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
+  capacitySelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
+  typeHousingSelectAdForm.removeEventListener('change', onTypeHousingChanged);
 
 }
 
@@ -323,10 +324,10 @@ function activatePage() {
   mapPins.appendChild(addAdvert(generatedOffers));
   deactivatePage(false);
 
-  titleInputAdForm.addEventListener('change', validateTitle);
-  roomSelectAdForm.addEventListener('change', validateRoom);
-  capacitySelectAdForm.addEventListener('change', validateRoom);
-  typeHousingSelectAdForm.addEventListener('change', validatePriceOfNight);
+  titleInputAdForm.addEventListener('change', onTitleChanged);
+  roomSelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
+  capacitySelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
+  typeHousingSelectAdForm.addEventListener('change', onTypeHousingChanged);
 
   mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
   adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
@@ -343,29 +344,25 @@ function disableElements(parent, children, isDisabled) {
 
 // Функция для отрисовки адреса
 function renderAdress() {
-  var addressInputForm = document.querySelector('input[name="address"]');
   addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_WIDTH, PIN_MAIN_HEIGHT);
 }
 
 // Функция для получения позиции пина
 function getPisitionPin(pin, pinWidth, pinHeight) {
   var positionX = Math.round(pin.offsetLeft + pinWidth / 2);
-  var positionY = Math.round(pin.offsetTop - pinHeight / 2);
+  var positionY = Math.round(pin.offsetTop + pinHeight);
   return positionX + ', ' + positionY;
 }
 
 // Функция для валидации комнат
-function validateRoom() {
+function onRoomOrCapacityChanged() {
   var room = countOfPlacesInRoom[roomSelectAdForm.value];
-  if (!room.capacity.includes(capacitySelectAdForm.value)) {
-    roomSelectAdForm.setCustomValidity(room.error);
-  } else {
-    roomSelectAdForm.setCustomValidity('');
-  }
+  var errorMessage = room.capacity.includes(capacitySelectAdForm.value) ? '' : room.error;
+  roomSelectAdForm.setCustomValidity(errorMessage);
 }
 
 // Функция для валидации заголовка
-function validateTitle() {
+function onTitleChanged() {
   if (titleInputAdForm.validity.tooShort) {
     titleInputAdForm.setCustomValidity('Заголовок должен состоять минимум из 30-ти символов');
   } else if (titleInputAdForm.validity.tooLong) {
@@ -378,7 +375,7 @@ function validateTitle() {
 }
 
 // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
-function validatePriceOfNight() {
+function onTypeHousingChanged() {
   var type = OFFER_TYPES[typeHousingSelectAdForm.value];
   priceInputAdForm.placeholder = type.minPrice;
   priceInputAdForm.min = type.minPrice;
