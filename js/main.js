@@ -20,12 +20,7 @@ var OFFER_DESCRIPTIONS = [
   'Просторная кухня. Лоджия с прекрасным видом на город',
   'До центра 5 минут. Удобная транспортная развязка'
 ];
-// var OFFER_TYPES = {
-//   'palace': PALACE,
-//   'flat': FLAT,
-//   'house': HOUSE,
-//   'bungalo': BUNGALO
-// };
+
 var OFFER_TYPES = {
   bungalo: {
     translate: 'Бунгало',
@@ -62,7 +57,6 @@ var PIN_WIDTH = 50;
 var PIN_HEIGHT = 70;
 var PIN_MAIN_SIZE = 65;
 var PIN_MAIN_HEIGHT_WITH_CORNER = 85;
-// var PIN_MAIN_HEIGHT = 6
 // var IMG_WIDTH = 45; Временные комменты кода
 // var IMG_HEIGHT = 40; Временные комменты кода
 var ENTER_KEY = 'Enter';
@@ -268,6 +262,9 @@ var titleInputAdForm = adForm.querySelector('input[name="title"]');
 var priceInputAdForm = adForm.querySelector('input[name="price"]');
 var addressInputForm = document.querySelector('input[name="address"]');
 
+var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
+var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
+
 var countOfPlacesInRoom = {
   1: {
     capacity: ['1'],
@@ -318,6 +315,8 @@ function deactivatePage(isDisabled) {
   capacitySelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
   typeHousingSelectAdForm.removeEventListener('change', onTypeHousingChanged);
 
+  timeoutSelectAdForm.removeEventListener('change', onTimeoutChanged);
+  timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
 }
 
 // Функция для активации страницы
@@ -331,6 +330,9 @@ function activatePage() {
   roomSelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
   capacitySelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
   typeHousingSelectAdForm.addEventListener('change', onTypeHousingChanged);
+
+  timeoutSelectAdForm.addEventListener('change', onTimeoutChanged);
+  timeinSelectAdForm.addEventListener('change', onTimeinChanged);
 
   mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
   adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
@@ -387,3 +389,34 @@ function onTypeHousingChanged() {
   priceInputAdForm.placeholder = type.minPrice;
   priceInputAdForm.min = type.minPrice;
 }
+
+
+var timingTimeHousing = {
+  '12:00': {
+    timeout: '12:00'
+  },
+  '13:00': {
+    timeout: '13:00'
+  },
+  '14:00': {
+    timeout: '14:00'
+  }
+};
+
+// Функция синхронизации Даты заезда и выезда
+function onTimeinChanged() {
+  var timein = timingTimeHousing[timeinSelectAdForm.value];
+  timeoutSelectAdForm.value = timein.timeout;
+}
+
+function onTimeoutChanged() {
+  var timeinKeys = Object.keys(timingTimeHousing);
+
+  for (var i = 0; i < timeinKeys.length; i++) {
+    if (timeoutSelectAdForm.value === timingTimeHousing[timeinKeys[i]].timeout) {
+      timeinSelectAdForm.value = timeoutSelectAdForm.value;
+      return;
+    }
+  }
+}
+// gdg
