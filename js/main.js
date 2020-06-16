@@ -96,8 +96,11 @@ function generateAdvertPin(offerItem) {
   elementPin.querySelector('img').alt = offerItem.offer.title;
 
   elementPin.addEventListener('click', function (evt) {
+    closeCard();
+    elementPin.classList.add('map__pin--active');
     mapSection.insertBefore(createCard(offerItem), mapFiltersContainer);
     evt.preventDefault();
+    document.addEventListener('keydown', onMapCardEcsKeydown);
   });
 
   return elementPin;
@@ -119,7 +122,7 @@ function generateData(countOfTitles) {
       title: OFFER_TITLES[i],
       address: location.x + ', ' + location.y,
       price: generateRandomValue(PRICE_VALUE_MIN, PRICE_VALUE_MAX),
-      type: OFFER_TYPES[getRandomElement(Object.keys(OFFER_TYPES))].translate,
+      type: OFFER_TYPES[getRandomElement(Object.keys(OFFER_TYPES))],
       rooms: getRandomElement(OFFER_ROOMS),
       guests: generateRandomValue(GUEST_VALUE_MIN, GUEST_VALUE_MAX),
       checkin: getRandomElement(OFFER_CHECK_INS),
@@ -191,7 +194,7 @@ function createCard(offerItem) {
   cardElement.querySelector('.popup__title').textContent = offerItem.offer.title;
   cardElement.querySelector('.popup__text--address').textContent = offerItem.offer.address;
   cardElement.querySelector('.popup__text--price').textContent = offerItem.offer.price + '₽/ночь';
-  cardElement.querySelector('.popup__type').textContent = offerItem.offer.type;
+  cardElement.querySelector('.popup__type').textContent = offerItem.offer.type.translate;
   cardElement.querySelector('.popup__text--capacity').textContent = renderRooms(offerItem.offer.rooms) + ' для ' + renderGuests(offerItem.offer.guests);
   cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerItem.offer.checkin + ', выезд до ' + offerItem.offer.checkout;
   cardElement.querySelector('.popup__description').textContent = offerItem.offer.description;
@@ -201,14 +204,31 @@ function createCard(offerItem) {
     cardElement.classList.add('hidden');
   });
 
-  popupClose.addEventListener('keydown', function (evt) {
-    if (evt.key === ESCAPE_KEY) {
-      evt.preventDefault();
-      cardElement.classList.add('hidden');
-    }
+  popupClose.removeEventListener('click', function () {
+    cardElement.classList.add('hidden');
   });
 
   return cardElement;
+}
+
+// Функция закрытия карточки
+function closeCard() {
+  var mapCard = document.querySelector('.map__card');
+  var mapPinActive = document.querySelector('.map__pin--active');
+
+  if (mapCard) {
+    mapCard.remove();
+    mapPinActive.classList.remove('map__pin--active');
+  }
+
+  document.removeEventListener('keydown', onMapCardEcsKeydown);
+}
+
+function onMapCardEcsKeydown(evt) {
+  if (evt.key === ESCAPE_KEY) {
+    evt.preventDefault();
+    closeCard();
+  }
 }
 
 // Функция отрисовки преимуществ
@@ -221,7 +241,7 @@ function renderFeatures(container, features) {
   }
 }
 
-// Функция отрисовки фото
+// Функция отрисовки фото квартиры в карточке
 function renderPhotos(container, photos) {
   container.innerHTML = '';
   for (var i = 0; i < photos.length; i++) {
@@ -229,6 +249,7 @@ function renderPhotos(container, photos) {
     photo.src = photos[i];
     photo.width = IMG_WIDTH;
     photo.height = IMG_HEIGHT;
+    photo.alt = 'Фото объекта ' + OFFER_TITLES[i];
     container.appendChild(photo);
   }
 }
@@ -297,7 +318,7 @@ var countOfPlacesInRoom = {
   }
 };
 
-var timingTimeHousing = {
+var timeinToTimeout = {
   '12:00': {
     timeout: '12:00'
   },
@@ -418,18 +439,19 @@ function onTypeHousingChanged() {
 
 // Функция синхронизации Даты заезда и выезда
 function onTimeinChanged() {
-  var timein = timingTimeHousing[timeinSelectAdForm.value];
+  var timein = timeinToTimeout[timeinSelectAdForm.value];
   timeoutSelectAdForm.value = timein.timeout;
 }
 
 // Функция синхронизации Даты выезда и заезда
 function onTimeoutChanged() {
-  var timeinKeys = Object.keys(timingTimeHousing);
+  var timeinKeys = Object.keys(timeinToTimeout);
 
   for (var i = 0; i < timeinKeys.length; i++) {
-    if (timeoutSelectAdForm.value === timingTimeHousing[timeinKeys[i]].timeout) {
-      timeinSelectAdForm.value = timeoutSelectAdForm.value;
+    if (timeoutSelectAdForm.value === timeinToTimeout[timeinKeys[i]].timeout) {
+      timeinSelectAdForm.value = timeinKeys[i];
       return;
     }
   }
 }
+
