@@ -330,7 +330,9 @@ var timeinToTimeout = {
   }
 };
 
-deactivatePage(true);
+deactivateFields(true);
+onRoomOrCapacityChanged();
+onTypeHousingChanged();
 
 mapPinMain.addEventListener('mousedown', function (evt) {
   if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
@@ -346,15 +348,12 @@ mapPinMain.addEventListener('keydown', function (evt) {
 });
 
 // Функция для деактивации страницы
-function deactivatePage(isDisabled) {
-  disableElements('.ad-form', 'fieldset', isDisabled);
-  disableElements('.map__filters', 'select', isDisabled);
-  disableElements('.map__filters', 'fieldset', isDisabled);
+function deactivateFields(isDeactivated) {
+  disableElements('.ad-form', 'fieldset', isDeactivated);
+  disableElements('.map__filters', 'select', isDeactivated);
+  disableElements('.map__filters', 'fieldset', isDeactivated);
 
   renderAdress(false);
-
-  onRoomOrCapacityChanged();
-  onTypeHousingChanged();
 
   titleInputAdForm.removeEventListener('change', onTitleChanged);
   roomSelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
@@ -368,7 +367,7 @@ function deactivatePage(isDisabled) {
 // Функция для активации страницы
 function activatePage() {
   mapPins.appendChild(addAdvert(generatedOffers));
-  deactivatePage(false);
+  deactivateFields(false);
 
   renderAdress(true);
 
@@ -383,6 +382,23 @@ function activatePage() {
 
   mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
   adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
+
+  // Функция для валидации полей формы
+  function validateFormFields(formFields) {
+    formFields.forEach(function (item) {
+      if (!item.validity.valid) {
+        item.classList.add('error-form');
+      } else {
+        item.classList.remove('error-form');
+      }
+    });
+  }
+
+  var adFormSubmit = adForm.querySelector('.ad-form__submit');
+  adFormSubmit.addEventListener('click', function () {
+    validateFormFields(adForm.querySelectorAll('input'));
+    validateFormFields(adForm.querySelectorAll('select'));
+  });
 }
 
 // Функция для добавления disabled элементам
@@ -454,4 +470,3 @@ function onTimeoutChanged() {
     }
   }
 }
-
