@@ -166,7 +166,6 @@ function generatePhotos() {
   return photos;
 }
 
-
 // ДЗ БОЛЬШЕ ДЕТАЛЕЙ (ЧАСТЬ 2)
 
 var templateCard = document.querySelector('#card').content.querySelector('.map__card');
@@ -200,15 +199,13 @@ function createCard(offerItem) {
   cardElement.querySelector('.popup__description').textContent = offerItem.offer.description;
   cardElement.querySelector('.popup__avatar').src = offerItem.author.avatar;
 
-  popupClose.addEventListener('click', function () {
-    cardElement.classList.add('hidden');
-  });
-
-  popupClose.removeEventListener('click', function () {
-    cardElement.classList.add('hidden');
-  });
+  popupClose.addEventListener('click', onCloseClickListener);
 
   return cardElement;
+}
+
+function onCloseClickListener() {
+  closeCard();
 }
 
 // Функция закрытия карточки
@@ -383,21 +380,15 @@ function activatePage() {
   mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
   adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
 
-  // Функция для валидации полей формы
   function validateFormFields(formFields) {
     formFields.forEach(function (item) {
-      if (!item.validity.valid) {
-        item.classList.add('error-form');
-      } else {
-        item.classList.remove('error-form');
-      }
+      item.classList.toggle('error-form', !item.validity.valid);
     });
   }
 
   var adFormSubmit = adForm.querySelector('.ad-form__submit');
   adFormSubmit.addEventListener('click', function () {
-    validateFormFields(adForm.querySelectorAll('input'));
-    validateFormFields(adForm.querySelectorAll('select'));
+    validateFormFields(adForm.querySelectorAll('input, select'));
   });
 }
 
