@@ -41,7 +41,7 @@
   }
 
   function onCloseClickListener() {
-    closeCard();
+    window.map.closeCard();
   }
 
   // Функция отрисовки преимуществ
@@ -62,7 +62,7 @@
       photo.src = photos[i];
       photo.width = IMG_WIDTH;
       photo.height = IMG_HEIGHT;
-      photo.alt = 'Фото объекта ' + OFFER_TITLES[i];
+      photo.alt = 'Фото объекта ' + window.data.OFFER_TITLES[i];
       container.appendChild(photo);
     }
   }
@@ -98,5 +98,9 @@
     }
     return result;
   }
+
+  window.card = {
+    createCard: createCard
+  };
 
 }());

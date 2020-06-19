@@ -20,11 +20,11 @@
     elementPin.querySelector('img').alt = offerItem.offer.title;
 
     elementPin.addEventListener('click', function (evt) {
-      closeCard();
+      window.map.closeCard();
       elementPin.classList.add('map__pin--active');
-      mapSection.insertBefore(createCard(offerItem), mapFiltersContainer);
+      window.form.mapSection.insertBefore(window.card.createCard(offerItem), mapFiltersContainer);
       evt.preventDefault();
-      document.addEventListener('keydown', onMapCardEcsKeydown);
+      document.addEventListener('keydown', window.map.onMapCardEcsKeydown);
     });
 
     return elementPin;
@@ -43,6 +43,7 @@
   }
 
   window.pin = {
-    generateAdvertPin: generateAdvertPin
+    generateAdvertPin: generateAdvertPin,
+    addAdvert: addAdvert
   };
 }());

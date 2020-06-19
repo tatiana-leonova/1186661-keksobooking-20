@@ -37,6 +37,7 @@
   };
 
   var mapSection = document.querySelector('.map');
+  var mapPins = document.querySelector('.map__pins');
   var adForm = document.querySelector('.ad-form');
   var roomSelectAdForm = adForm.querySelector('select[name="rooms"]');
   var typeHousingSelectAdForm = adForm.querySelector('select[name="type"]');
@@ -71,7 +72,7 @@
 
   // Функция для активации страницы
   function activatePage() {
-    mapPins.appendChild(addAdvert(generatedOffers));
+    mapPins.appendChild(window.pin.addAdvert(window.data.generatedOffers));
     deactivateFields(false);
 
     renderAdress(true);
@@ -112,9 +113,9 @@
   // Функция для отрисовки адреса
   function renderAdress(isPageActive) {
     if (isPageActive) {
-      addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
+      addressInputForm.value = getPisitionPin(window.map.mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
     } else {
-      addressInputForm.value = getPisitionPin(mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
+      addressInputForm.value = getPisitionPin(window.map.mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
     }
   }
 
@@ -148,7 +149,7 @@
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
   function onTypeHousingChanged() {
-    var type = OFFER_TYPES[typeHousingSelectAdForm.value];
+    var type = window.data.OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
   }
@@ -173,7 +174,8 @@
 
   window.form = {
     activatePage: activatePage,
-    disableElements: disableElements
+    disableElements: disableElements,
+    mapSection: mapSection
   };
 
 }());

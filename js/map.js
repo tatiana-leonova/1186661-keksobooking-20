@@ -5,7 +5,6 @@
   var ESCAPE_KEY = 'Escape';
   var LEFT_KEY_MOUSE_CODE = 1;
 
-  var mapPins = document.querySelector('.map__pins');
   var mapPinMain = document.querySelector('.map__pin--main');
 
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -40,5 +39,11 @@
       closeCard();
     }
   }
+
+  window.map = {
+    mapPinMain: mapPinMain,
+    closeCard: closeCard,
+    onMapCardEcsKeydown: onMapCardEcsKeydown
+  };
 
 })();

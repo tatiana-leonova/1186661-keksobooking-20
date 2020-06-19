@@ -119,7 +119,8 @@
   }
 
   window.data = {
-    OFFER_TYPES: OFFER_TYPES
+    OFFER_TYPES: OFFER_TYPES,
+    generatedOffers: generatedOffers
   };
 
 })();
