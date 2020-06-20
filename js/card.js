@@ -21,7 +21,7 @@
     }
 
     if (offerItem.offer.photos.length) {
-      renderPhotos(cardPhotos, offerItem.offer.photos);
+      renderPhotos(cardPhotos, offerItem);
     } else {
       cardPhotos.classList.add('visually-hidden');
     }
@@ -55,14 +55,14 @@
   }
 
   // Функция отрисовки фото квартиры в карточке
-  function renderPhotos(container, photos) {
+  function renderPhotos(container, offerItem) {
     container.innerHTML = '';
-    for (var i = 0; i < photos.length; i++) {
+    for (var i = 0; i < offerItem.offer.photos.length; i++) {
       var photo = document.createElement('img');
-      photo.src = photos[i];
+      photo.src = offerItem.offer.photos[i];
       photo.width = IMG_WIDTH;
       photo.height = IMG_HEIGHT;
-      photo.alt = 'Фото объекта ' + window.data.OFFER_TITLES[i];
+      photo.alt = 'Фото объекта ' + offerItem.offer.title;
       container.appendChild(photo);
     }
   }

@@ -48,8 +48,6 @@
   var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
 
-
-  deactivateFields(true);
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
 
@@ -71,8 +69,8 @@
   }
 
   // Функция для активации страницы
-  function activatePage() {
-    mapPins.appendChild(window.pin.addAdvert(window.data.generatedOffers));
+  function activatePage(generatedOffers) {
+    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
     deactivateFields(false);
 
     renderAdress(true);
@@ -175,6 +173,7 @@
   window.form = {
     activatePage: activatePage,
     disableElements: disableElements,
+    deactivateFields: deactivateFields,
     mapSection: mapSection
   };
 

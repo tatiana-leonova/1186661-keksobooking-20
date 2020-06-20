@@ -57,20 +57,20 @@
   var locationXMax = document.querySelector('.map__overlay').clientWidth;
 
   // Генерация массива офферов
-  var generatedOffers = generateData(OFFER_TITLES.length);
+  // var generatedOffers = generateData(OFFER_TITLES.length);
 
-  function generateData(countOfTitles) {
+  function generatedOffers() {
     var offers = [];
-    for (var i = 0; i < countOfTitles; i++) {
-      var object = {};
+    for (var i = 0; i < OFFER_TITLES.length; i++) {
+      var offerItem = {};
       var location = {
         x: generateRandomValue(LOCATION_X_MIN, locationXMax),
         y: generateRandomValue(LOCATION_Y_MIN, LOCATION_Y_MAX)
       };
-      object.author = {
+      offerItem.author = {
         avatar: AVATAR_IMG + (i + 1) + PNG_FORMAT
       };
-      object.offer = {
+      offerItem.offer = {
         title: OFFER_TITLES[i],
         address: location.x + ', ' + location.y,
         price: generateRandomValue(PRICE_VALUE_MIN, PRICE_VALUE_MAX),
@@ -83,11 +83,11 @@
         description: getRandomElement(OFFER_DESCRIPTIONS),
         photos: generatePhotos()
       };
-      object.location = {
+      offerItem.location = {
         x: location.x,
         y: location.y
       };
-      offers.push(object);
+      offers.push(offerItem);
     }
     return offers;
   }

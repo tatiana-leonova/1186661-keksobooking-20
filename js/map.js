@@ -7,18 +7,22 @@
 
   var mapPinMain = document.querySelector('.map__pin--main');
 
-  mapPinMain.addEventListener('mousedown', function (evt) {
-    if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
-      activatePage();
-    }
-    evt.preventDefault();
-  });
+  function setMousedownListener(callback) {
+    mapPinMain.addEventListener('mousedown', function (evt) {
+      if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
+        callback();
+      }
+      evt.preventDefault();
+    });
+  }
 
-  mapPinMain.addEventListener('keydown', function (evt) {
-    if (evt.key === ENTER_KEY) { // нажатие клавиши enter
-      activatePage();
-    }
-  });
+  function setKeydownListener(callback) {
+    mapPinMain.addEventListener('keydown', function (evt) {
+      if (evt.key === ENTER_KEY) { // нажатие мышки только на левую кнопку
+        callback();
+      }
+    });
+  }
 
   // Функция закрытия карточки
   function closeCard() {
@@ -42,6 +46,8 @@
 
   window.map = {
     mapPinMain: mapPinMain,
+    setMousedownListener: setMousedownListener,
+    setKeydownListener: setKeydownListener,
     closeCard: closeCard,
     onMapCardEcsKeydown: onMapCardEcsKeydown
   };

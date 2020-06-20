@@ -31,19 +31,18 @@
   }
 
   // Добавление пина объявлений
-  function addAdvert(оffers) {
+  function addAdvert(generatedOffers) {
     var fragment = document.createDocumentFragment();
 
-    for (var i = 0; i < оffers.length; i++) {
-      if (оffers[i].offer) {
-        fragment.appendChild(generateAdvertPin(оffers[i]));
+    for (var i = 0; i < generatedOffers.length; i++) {
+      if (generatedOffers[i].offer) {
+        fragment.appendChild(generateAdvertPin(generatedOffers[i]));
       }
     }
     return fragment;
   }
 
   window.pin = {
-    generateAdvertPin: generateAdvertPin,
     addAdvert: addAdvert
   };
 }());
