@@ -172,7 +172,6 @@
 
   window.form = {
     activatePage: activatePage,
-    disableElements: disableElements,
     deactivateFields: deactivateFields,
     mapSection: mapSection
   };
