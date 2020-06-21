@@ -120,7 +120,9 @@
 
   window.data = {
     OFFER_TYPES: OFFER_TYPES,
-    generatedOffers: generatedOffers
+    generatedOffers: generatedOffers,
+    LOCATION_Y_MIN: LOCATION_Y_MIN,
+    LOCATION_Y_MAX: LOCATION_Y_MAX
   };
 
 })();

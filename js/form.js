@@ -47,17 +47,19 @@
   var addressInputForm = document.querySelector('input[name="address"]');
   var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
+  var isFormActiate = false;
 
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
 
   // Функция для деактивации страницы
   function deactivateFields(isDeactivated) {
+    isFormActiate = false;
     disableElements('.ad-form', 'fieldset', isDeactivated);
     disableElements('.map__filters', 'select', isDeactivated);
     disableElements('.map__filters', 'fieldset', isDeactivated);
 
-    renderAdress(false);
+    renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
     titleInputAdForm.removeEventListener('change', onTitleChanged);
     roomSelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
@@ -70,10 +72,13 @@
 
   // Функция для активации страницы
   function activatePage(generatedOffers) {
+    if (isFormActiate) {
+      return;
+    }
     mapPins.appendChild(window.pin.addAdvert(generatedOffers));
     deactivateFields(false);
 
-    renderAdress(true);
+    renderAdress(window.map.pinMain);
 
     titleInputAdForm.addEventListener('change', onTitleChanged);
     roomSelectAdForm.addEventListener('change', onRoomOrCapacityChanged);
@@ -97,6 +102,7 @@
     adFormSubmit.addEventListener('click', function () {
       validateFormFields(adForm.querySelectorAll('input, select'));
     });
+    isFormActiate = true;
   }
 
   // Функция для добавления disabled элементам
@@ -109,18 +115,16 @@
   }
 
   // Функция для отрисовки адреса
-  function renderAdress(isPageActive) {
-    if (isPageActive) {
-      addressInputForm.value = getPisitionPin(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
-    } else {
-      addressInputForm.value = getPisitionPin(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
-    }
+  function renderAdress(pin, mapWidth, mapHeight) {
+    var width = mapWidth || PIN_MAIN_SIZE;
+    var height = mapHeight || PIN_MAIN_HEIGHT_WITH_CORNER;
+    addressInputForm.value = getPositionPin(pin, width, height);
   }
 
   // Функция для получения позиции пина
-  function getPisitionPin(pin, pinWidth, pinHeight) {
-    var positionX = Math.round(pin.offsetLeft + pinWidth / 2);
-    var positionY = Math.round(pin.offsetTop + pinHeight);
+  function getPositionPin(pin, mapWidth, mapHeight) {
+    var positionX = Math.round(pin.offsetLeft + mapWidth / 2);
+    var positionY = Math.round(pin.offsetTop + mapHeight);
     return positionX + ', ' + positionY;
   }
 
@@ -173,7 +177,9 @@
   window.form = {
     activatePage: activatePage,
     deactivateFields: deactivateFields,
-    mapSection: mapSection
+    renderAdress: renderAdress,
+    mapSection: mapSection,
+    mapPins: mapPins
   };
 
 }());
