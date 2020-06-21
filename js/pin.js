@@ -22,7 +22,7 @@
     elementPin.addEventListener('click', function (evt) {
       window.map.closeCard();
       elementPin.classList.add('map__pin--active');
-      window.form.mapSection.insertBefore(window.card.createCard(offerItem), mapFiltersContainer);
+      window.form.mapSection.insertBefore(window.card.create(offerItem), mapFiltersContainer);
       evt.preventDefault();
       document.addEventListener('keydown', window.map.onMapCardEcsKeydown);
     });

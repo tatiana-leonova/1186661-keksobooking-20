@@ -111,9 +111,9 @@
   // Функция для отрисовки адреса
   function renderAdress(isPageActive) {
     if (isPageActive) {
-      addressInputForm.value = getPisitionPin(window.map.mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
+      addressInputForm.value = getPisitionPin(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_HEIGHT_WITH_CORNER);
     } else {
-      addressInputForm.value = getPisitionPin(window.map.mapPinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
+      addressInputForm.value = getPisitionPin(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
     }
   }
 
