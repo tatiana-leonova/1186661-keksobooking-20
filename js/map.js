@@ -45,7 +45,7 @@
   }
 
   window.map = {
-    mapPinMain: mapPinMain,
+    pinMain: mapPinMain,
     setMousedownListener: setMousedownListener,
     setKeydownListener: setKeydownListener,
     closeCard: closeCard,
