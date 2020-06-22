@@ -179,7 +179,8 @@
     deactivateFields: deactivateFields,
     renderAdress: renderAdress,
     mapSection: mapSection,
-    mapPins: mapPins
+    mapPins: mapPins,
+    PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 
 }());

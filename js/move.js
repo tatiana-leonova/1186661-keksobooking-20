@@ -48,16 +48,20 @@
     var currentY = window.map.pinMain.offsetTop - shift.y;
 
     // Проверка границ перемещения пина
+    var maxX = window.form.mapPins.clientWidth - window.map.pinMain.clientWidth;
+    var minY = window.data.LOCATION_Y_MIN - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
+    var maxY = window.data.LOCATION_Y_MAX - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
+
     if (currentX < 0) {
       currentX = 0;
-    } else if (currentX > window.form.mapPins.clientWidth - window.map.pinMain.clientWidth) {
-      currentX = window.form.mapPins.clientWidth - window.map.pinMain.clientWidth;
+    } else if (currentX > maxX) {
+      currentX = maxX;
     }
 
-    if (currentY < window.data.LOCATION_Y_MIN) {
-      currentY = window.data.LOCATION_Y_MIN;
-    } else if (currentY > window.data.LOCATION_Y_MAX) {
-      currentY = window.data.LOCATION_Y_MAX;
+    if (currentY < minY) {
+      currentY = minY;
+    } else if (currentY > maxY) {
+      currentY = maxY;
     }
 
     window.map.pinMain.style.left = currentX + 'px';
