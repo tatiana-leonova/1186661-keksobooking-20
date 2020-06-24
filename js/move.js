@@ -2,6 +2,9 @@
 
 (function () {
 
+  var LOCATION_Y_MIN = 130;
+  var LOCATION_Y_MAX = 630;
+
   var startCoordsPin = {};
 
   window.map.pinMain.addEventListener('mousedown', function (evt) {
@@ -49,8 +52,8 @@
 
     // Проверка границ перемещения пина
     var maxX = window.form.mapPins.clientWidth - window.map.pinMain.clientWidth;
-    var minY = window.data.LOCATION_Y_MIN - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
-    var maxY = window.data.LOCATION_Y_MAX - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
+    var minY = LOCATION_Y_MIN - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
+    var maxY = LOCATION_Y_MAX - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
 
     if (currentX < 0) {
       currentX = 0;

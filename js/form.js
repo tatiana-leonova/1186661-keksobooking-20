@@ -36,6 +36,25 @@
     }
   };
 
+  var OFFER_TYPES = {
+    'bungalo': {
+      translate: 'Бунгало',
+      minPrice: 0
+    },
+    'flat': {
+      translate: 'Квартира',
+      minPrice: 1000
+    },
+    'house': {
+      translate: 'Дом',
+      minPrice: 5000
+    },
+    'palace': {
+      translate: 'Дворец',
+      minPrice: 10000
+    }
+  };
+
   var mapSection = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
   var adForm = document.querySelector('.ad-form');
@@ -151,7 +170,7 @@
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
   function onTypeHousingChanged() {
-    var type = window.data.OFFER_TYPES[typeHousingSelectAdForm.value];
+    var type = OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
   }
