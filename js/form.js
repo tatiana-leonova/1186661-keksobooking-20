@@ -75,8 +75,6 @@
   function deactivateFields(isDeactivated) {
     isFormActiate = false;
     disableElements('.ad-form', 'fieldset', isDeactivated);
-    disableElements('.map__filters', 'select', isDeactivated);
-    disableElements('.map__filters', 'fieldset', isDeactivated);
 
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
@@ -89,12 +87,18 @@
     timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
   }
 
+  // Функция деактивации фильтрации пинов
+  function deactivateFilerPins(isDeactivated) {
+    disableElements('.map__filters', 'select', isDeactivated);
+    disableElements('.map__filters', 'fieldset', isDeactivated);
+  }
+
   // Функция для активации страницы
-  function activatePage(generatedOffers) {
+  function activatePage() {
     if (isFormActiate) {
       return;
     }
-    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
+
     deactivateFields(false);
 
     renderAdress(window.map.pinMain);
@@ -122,6 +126,10 @@
       validateFormFields(adForm.querySelectorAll('input, select'));
     });
     isFormActiate = true;
+  }
+
+  function renderData(generatedOffers) {
+    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
   }
 
   // Функция для добавления disabled элементам
@@ -196,6 +204,8 @@
   window.form = {
     activatePage: activatePage,
     deactivateFields: deactivateFields,
+    deactivateFilerPins: deactivateFilerPins,
+    renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
