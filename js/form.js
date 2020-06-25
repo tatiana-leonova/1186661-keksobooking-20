@@ -36,6 +36,25 @@
     }
   };
 
+  var OFFER_TYPES = {
+    'bungalo': {
+      translate: 'Бунгало',
+      minPrice: 0
+    },
+    'flat': {
+      translate: 'Квартира',
+      minPrice: 1000
+    },
+    'house': {
+      translate: 'Дом',
+      minPrice: 5000
+    },
+    'palace': {
+      translate: 'Дворец',
+      minPrice: 10000
+    }
+  };
+
   var mapSection = document.querySelector('.map');
   var mapPins = document.querySelector('.map__pins');
   var adForm = document.querySelector('.ad-form');
@@ -56,8 +75,6 @@
   function deactivateFields(isDeactivated) {
     isFormActiate = false;
     disableElements('.ad-form', 'fieldset', isDeactivated);
-    disableElements('.map__filters', 'select', isDeactivated);
-    disableElements('.map__filters', 'fieldset', isDeactivated);
 
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
@@ -70,12 +87,18 @@
     timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
   }
 
+  // Функция деактивации фильтрации пинов
+  function deactivateFilerPins(isDeactivated) {
+    disableElements('.map__filters', 'select', isDeactivated);
+    disableElements('.map__filters', 'fieldset', isDeactivated);
+  }
+
   // Функция для активации страницы
-  function activatePage(generatedOffers) {
+  function activatePage() {
     if (isFormActiate) {
       return;
     }
-    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
+
     deactivateFields(false);
 
     renderAdress(window.map.pinMain);
@@ -103,6 +126,10 @@
       validateFormFields(adForm.querySelectorAll('input, select'));
     });
     isFormActiate = true;
+  }
+
+  function renderData(generatedOffers) {
+    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
   }
 
   // Функция для добавления disabled элементам
@@ -151,7 +178,7 @@
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
   function onTypeHousingChanged() {
-    var type = window.data.OFFER_TYPES[typeHousingSelectAdForm.value];
+    var type = OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
   }
@@ -177,6 +204,8 @@
   window.form = {
     activatePage: activatePage,
     deactivateFields: deactivateFields,
+    deactivateFilerPins: deactivateFilerPins,
+    renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
