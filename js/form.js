@@ -68,12 +68,17 @@
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
   var isFormActiate = false;
 
+  // var resetButton = document.querySelector('.ad-form__reset');
+
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
 
   // Функция для деактивации страницы
   function deactivateFields(isDeactivated) {
     isFormActiate = false;
+    mapSection.classList.add('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
+    adForm.classList.add('ad-form--disabled'); // Удаление opacity на форме
+
     disableElements('.ad-form', 'fieldset', isDeactivated);
 
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
@@ -201,14 +206,21 @@
     }
   }
 
+  function clearForm(form) {
+    var formElement = document.querySelector(form);
+    formElement.reset();
+  }
+
   window.form = {
     activatePage: activatePage,
+    clearForm: clearForm,
     deactivateFields: deactivateFields,
     deactivateFilerPins: deactivateFilerPins,
     renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
+    adForm: adForm,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

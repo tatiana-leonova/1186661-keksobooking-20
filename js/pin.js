@@ -42,7 +42,16 @@
     return fragment;
   }
 
+  function clearPins() {
+    var pins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    for (var i = 0; i < pins.length; i++) {
+      pins[i].remove();
+    }
+
+  }
+
   window.pin = {
-    addAdvert: addAdvert
+    addAdvert: addAdvert,
+    clear: clearPins
   };
 }());
