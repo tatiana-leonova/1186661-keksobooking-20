@@ -63,6 +63,7 @@
       photo.width = IMG_WIDTH;
       photo.height = IMG_HEIGHT;
       photo.alt = 'Фото объекта ' + offerItem.offer.title;
+      photo.classList.add('popup__photo');
       container.appendChild(photo);
     }
   }
