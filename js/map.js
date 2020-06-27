@@ -18,7 +18,7 @@
 
   function setKeydownListener(callback) {
     mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.key === ENTER_KEY) { // нажатие мышки только на левую кнопку
+      if (evt.key === ENTER_KEY) {
         callback();
       }
     });
@@ -49,7 +49,8 @@
     setMousedownListener: setMousedownListener,
     setKeydownListener: setKeydownListener,
     closeCard: closeCard,
-    onMapCardEcsKeydown: onMapCardEcsKeydown
+    onMapCardEcsKeydown: onMapCardEcsKeydown,
+    ESCAPE_KEY: ESCAPE_KEY
   };
 
 })();

@@ -206,9 +206,42 @@
     }
   }
 
+  // Функция для очистки формы
   function clearForm(form) {
     var formElement = document.querySelector(form);
     formElement.reset();
+  }
+
+  // Функция для показа сообщения успешной отправки
+  function showSuccessMessage() {
+    var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
+    var notice = document.querySelector('.notice');
+    var messageSuccessElement = templateMessageSuccess.cloneNode(true);
+
+    notice.insertBefore(messageSuccessElement, adForm);
+
+    document.addEventListener('keydown', onShowSuccessEcsKeydown);
+    document.addEventListener('click', onShowSuccessClick);
+  }
+
+  // Обработчик закрытия модалки с сообщением при клике на Esc
+  function onShowSuccessEcsKeydown(evt) {
+    if (evt.key === window.map.ESCAPE_KEY) {
+      evt.preventDefault();
+      removeSuccessMessage();
+    }
+  }
+
+  function removeSuccessMessage() {
+    document.querySelector('.success').remove();
+  }
+
+  // Обработчик закрытия при клике на произвольное область экрана
+  function onShowSuccessClick(evt) {
+    if (evt.target.matches('.success')) {
+      evt.preventDefault();
+      removeSuccessMessage();
+    }
   }
 
   window.form = {
@@ -221,6 +254,7 @@
     mapSection: mapSection,
     mapPins: mapPins,
     adForm: adForm,
+    showSuccessMessage: showSuccessMessage,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

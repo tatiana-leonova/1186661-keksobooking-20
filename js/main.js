@@ -19,7 +19,10 @@ var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
         function (response) {
           window.form.renderData(response);
           window.form.deactivateFilerPins(false);
-        }
+        },
+        function (error) {
+          console.log('error');
+        },
     );
   }
 
@@ -28,10 +31,13 @@ var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
     evt.preventDefault();
     window.backend.uploadData(
         URL_POST_REQUEST,
-        new FormData(window.form.adForm),
         function (response) {
-          var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
-        }
+          window.form.showSuccessMessage();
+        },
+        function (error) {
+          console.log('error');
+        },
+        new FormData(window.form.adForm)
     );
     window.form.deactivateFields(true);
     window.form.deactivateFilerPins(true);

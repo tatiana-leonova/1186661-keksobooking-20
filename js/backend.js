@@ -7,6 +7,7 @@
   };
 
   function loadData(url, onSuccess, onError) {
+    onError('Произошла ошибка соединения');
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -32,7 +33,7 @@
     xhr.send();
   }
 
-  function uploadData(url, data, onSuccess) {
+  function uploadData(url, onSuccess, onError, data) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -49,7 +50,6 @@
 
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + TIMEOUT_IN_MILIS + ' мс');
-    });
     });
 
     xhr.open('POST', url);
