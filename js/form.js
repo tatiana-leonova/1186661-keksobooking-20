@@ -68,8 +68,6 @@
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
   var isFormActiate = false;
 
-  // var resetButton = document.querySelector('.ad-form__reset');
-
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
 
@@ -220,28 +218,72 @@
 
     notice.insertBefore(messageSuccessElement, adForm);
 
-    document.addEventListener('keydown', onShowSuccessEcsKeydown);
-    document.addEventListener('click', onShowSuccessClick);
+    document.addEventListener('keydown', onShowSuccessMessageEcsKeydown);
+    document.addEventListener('click', onShowSuccessMessageClick);
+  }
+
+  // Закрытие сообщения успешной отправки
+  function removeSuccessMessage() {
+    document.querySelector('.success').remove();
+  }
+
+  // Обработчик закрытия при клике на произвольное область экрана
+  function onShowSuccessMessageClick(evt) {
+    if (evt.target.matches('.success')) {
+      evt.preventDefault();
+      removeSuccessMessage();
+    }
   }
 
   // Обработчик закрытия модалки с сообщением при клике на Esc
-  function onShowSuccessEcsKeydown(evt) {
+  function onShowSuccessMessageEcsKeydown(evt) {
     if (evt.key === window.map.ESCAPE_KEY) {
       evt.preventDefault();
       removeSuccessMessage();
     }
   }
 
-  function removeSuccessMessage() {
-    document.querySelector('.success').remove();
+  // Функция для показа сообщения об ошибке
+  function showErrorMessage(error) {
+    var templateMessageError = document.querySelector('#error').content.querySelector('.error');
+    var notice = document.querySelector('.notice');
+    var messageErrorElement = templateMessageError.cloneNode(true);
+    var errorButton = messageErrorElement.querySelector('.error__button');
+
+    var messageText = messageErrorElement.querySelector('.error__message');
+    messageText.textContent = error;
+
+    notice.insertBefore(messageErrorElement, adForm);
+
+    document.addEventListener('keydown', onShowErrorMassageEcsKeydown);
+    document.addEventListener('click', onShowErrorMassageClick);
+    errorButton.addEventListener('click', onErrorButtonClick);
+  }
+
+  // Закрытие сообщения успешной отправки
+  function removeErrorMessage() {
+    document.querySelector('.error').remove();
   }
 
   // Обработчик закрытия при клике на произвольное область экрана
-  function onShowSuccessClick(evt) {
-    if (evt.target.matches('.success')) {
+  function onShowErrorMassageClick(evt) {
+    if (evt.target.matches('.error')) {
       evt.preventDefault();
-      removeSuccessMessage();
+      removeErrorMessage();
     }
+  }
+
+  // Обработчик закрытия модалки с сообщением при клике на Esc
+  function onShowErrorMassageEcsKeydown(evt) {
+    if (evt.key === window.map.ESCAPE_KEY) {
+      evt.preventDefault();
+      removeErrorMessage();
+    }
+  }
+
+  // Функция закрытия формы после ошибки
+  function onErrorButtonClick() {
+    removeErrorMessage();
   }
 
   window.form = {
@@ -255,6 +297,7 @@
     mapPins: mapPins,
     adForm: adForm,
     showSuccessMessage: showSuccessMessage,
+    showErrorMessage: showErrorMessage,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

@@ -20,22 +20,19 @@ var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
           window.form.renderData(response);
           window.form.deactivateFilerPins(false);
         },
-        function (error) {
-          console.log('error');
-        },
-    );
+        function () {
+        });
   }
 
-  // Функция для отмены действия по умолчани
   window.form.adForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
     window.backend.uploadData(
         URL_POST_REQUEST,
-        function (response) {
+        function () {
           window.form.showSuccessMessage();
         },
         function (error) {
-          console.log('error');
+          window.form.showErrorMessage(error);
         },
         new FormData(window.form.adForm)
     );
@@ -43,10 +40,6 @@ var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
     window.form.deactivateFilerPins(true);
     window.pin.clear();
     window.form.clearForm('.ad-form');
-
-
-    // window.uploadData(new FormData(window.form.adForm), function(response) {
-    // });
   });
 
 }());

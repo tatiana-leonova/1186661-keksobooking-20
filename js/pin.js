@@ -47,7 +47,6 @@
     for (var i = 0; i < pins.length; i++) {
       pins[i].remove();
     }
-
   }
 
   window.pin = {
