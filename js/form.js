@@ -66,19 +66,18 @@
   var addressInputForm = document.querySelector('input[name="address"]');
   var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
+  var adFormSubmit = adForm.querySelector('.ad-form__submit');
   var isFormActiate = false;
 
 
-  onRoomOrCapacityChanged();
-  onTypeHousingChanged();
+  сhangedRoomOrCapacity();
+  сhangedTypeHousing();
 
   // Функция для деактивации страницы
-  function deactivateFields(isDeactivated) {
+  function deactivateFields() {
     isFormActiate = false;
     mapSection.classList.add('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
     adForm.classList.add('ad-form--disabled'); // Удаление opacity на форме
-
-    disableElements('.ad-form', 'fieldset', isDeactivated);
 
     window.map.setMainPinPosition(
         mapSection.offsetWidth / 2,
@@ -94,6 +93,7 @@
 
     timeoutSelectAdForm.removeEventListener('change', onTimeoutChanged);
     timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
+    adFormSubmit.removeEventListener('click', onFormSubmitClick);
   }
 
   // Функция деактивации фильтрации пинов
@@ -108,8 +108,7 @@
       return;
     }
 
-    deactivateFields(false);
-    resetFormByButton();
+    setupResetFormButton();
 
     renderAdress(window.map.pinMain);
 
@@ -125,17 +124,18 @@
     mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
     adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
 
-    function validateFormFields(formFields) {
-      formFields.forEach(function (item) {
-        item.classList.toggle('error-form', !item.validity.valid);
-      });
-    }
-
-    var adFormSubmit = adForm.querySelector('.ad-form__submit');
-    adFormSubmit.addEventListener('click', function () {
-      validateFormFields(adForm.querySelectorAll('input, select'));
-    });
+    adFormSubmit.addEventListener('click', onFormSubmitClick);
     isFormActiate = true;
+  }
+
+  function validateFormFields(formFields) {
+    formFields.forEach(function (item) {
+      item.classList.toggle('error-form', !item.validity.valid);
+    });
+  }
+
+  function onFormSubmitClick() {
+    validateFormFields(adForm.querySelectorAll('input, select'));
   }
 
   function renderData(generatedOffers, pinWidth, pinHeight) {
@@ -167,7 +167,7 @@
 
 
   // Функция для валидации комнат
-  function onRoomOrCapacityChanged() {
+  function сhangedRoomOrCapacity() {
     var room = countOfPlacesInRoom[roomSelectAdForm.value];
     var errorMessage = room.capacity.includes(capacitySelectAdForm.value) ? '' : room.error;
     roomSelectAdForm.setCustomValidity(errorMessage);
@@ -187,10 +187,18 @@
   }
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
-  function onTypeHousingChanged() {
+  function сhangedTypeHousing() {
     var type = OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
+  }
+
+  function onRoomOrCapacityChanged() {
+    сhangedRoomOrCapacity();
+  }
+
+  function onTypeHousingChanged() {
+    сhangedTypeHousing();
   }
 
   // Функция синхронизации Даты заезда и выезда
@@ -217,7 +225,7 @@
     formElement.reset();
   }
 
-  function resetFormByButton() {
+  function setupResetFormButton() {
     var resetButton = document.querySelector('.ad-form__reset');
     resetButton.addEventListener('click', onResetButtonClick);
   }
@@ -227,9 +235,9 @@
   }
 
   function disableForm() {
+    window.map.closeCard();
     deactivateFilerPins(true);
     clearForm('.ad-form');
-    window.map.closeCard();
     window.pin.clear();
     deactivateFields(true);
   }
@@ -238,6 +246,7 @@
     activatePage: activatePage,
     disableForm: disableForm,
     deactivateFields: deactivateFields,
+    disableElements: disableElements,
     deactivateFilerPins: deactivateFilerPins,
     renderData: renderData,
     renderAdress: renderAdress,

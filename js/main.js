@@ -7,7 +7,8 @@
   var URL_GET_REQUEST = 'https://javascript.pages.academy/keksobooking/data';
   var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
 
-  window.form.deactivateFields(true);
+  window.form.deactivateFields();
+  window.form.disableElements('.ad-form', 'fieldset', true);
   window.form.deactivateFilerPins(true);
 
   window.map.setMousedownListener(activatePage);
@@ -16,6 +17,7 @@
 
   function activatePage() {
     window.form.activatePage();
+    window.form.disableElements('.ad-form', 'fieldset', false);
     window.backend.loadData(
         URL_GET_REQUEST,
         function (response) {
@@ -43,11 +45,11 @@
     window.backend.uploadData(
         URL_POST_REQUEST,
         function () {
-          window.messages.showSuccessMessage();
+          window.messages.showSuccess();
           window.form.disableForm();
         },
         function (error) {
-          window.messages.showErrorMessage(error);
+          window.messages.showError(error);
         },
         new FormData(window.form.adForm)
     );

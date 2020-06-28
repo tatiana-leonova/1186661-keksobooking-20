@@ -31,9 +31,7 @@
 
     if (mapCard) {
       mapCard.remove();
-      if (mapPinActive) {
-        mapPinActive.classList.remove('map__pin--active');
-      }
+      mapPinActive.classList.remove('map__pin--active');
     }
 
     document.removeEventListener('keydown', onMapCardEcsKeydown);

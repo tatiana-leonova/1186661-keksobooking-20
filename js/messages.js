@@ -4,6 +4,9 @@
   var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
   var notice = document.querySelector('.notice');
   var templateMessageError = document.querySelector('#error').content.querySelector('.error');
+  var errorLayoutClickCallback;
+  var errorMessageEcsKeydownCallback;
+  var errorButtonClickCallback;
 
   // Функция для показа сообщения успешной отправки
   function showSuccessMessage() {
@@ -65,14 +68,14 @@
     if (currentErrorTemplate) {
       currentErrorTemplate.remove();
     }
-    document.removeEventListener('keydown', onErrorMessageEcsKeydown(errorButton));
-    document.removeEventListener('click', onErrorLayoutClick(errorButton));
-    errorButton.removeEventListener('click', onErrorButtonClick(errorButton));
+    document.removeEventListener('keydown', errorMessageEcsKeydownCallback);
+    document.removeEventListener('click', errorLayoutClickCallback);
+    errorButton.removeEventListener('click', errorButtonClickCallback);
   }
 
   // Обработчик закрытия при клике на произвольное область экрана
   function onErrorLayoutClick(errorButton, onMessageClickCallback) {
-    return function (evt) {
+    errorLayoutClickCallback = function (evt) {
       if (evt.target.matches('.error')) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
@@ -81,11 +84,12 @@
         }
       }
     };
+    return errorLayoutClickCallback;
   }
 
   // Обработчик закрытия модалки с сообщением при клике на Esc
   function onErrorMessageEcsKeydown(errorButton, onEcsKeydownCallback) {
-    return function (evt) {
+    errorMessageEcsKeydownCallback = function (evt) {
       if (evt.key === window.map.ESCAPE_KEY) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
@@ -94,21 +98,23 @@
         }
       }
     };
+    return errorMessageEcsKeydownCallback;
   }
 
   // Функция закрытия формы после ошибки
   function onErrorButtonClick(errorButton, onButtonClickCallback) {
-    return function () {
+    errorButtonClickCallback = function () {
       removeErrorMessage(errorButton);
       if (onButtonClickCallback) {
         onButtonClickCallback();
       }
     };
+    return errorButtonClickCallback;
   }
 
   window.messages = {
-    showSuccessMessage: showSuccessMessage,
-    showErrorMessage: showErrorMessage
+    showSuccess: showSuccessMessage,
+    showError: showErrorMessage
   };
 
 }());

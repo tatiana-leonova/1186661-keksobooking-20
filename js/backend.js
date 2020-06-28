@@ -7,20 +7,20 @@
   };
 
   function loadData(url, onSuccess, onError) {
-    var xhr = prepareResponse(url, onSuccess, onError);
+    var xhr = prepareResponse(onSuccess, onError);
     xhr.open('GET', url);
 
     xhr.send();
   }
 
   function uploadData(url, onSuccess, onError, data) {
-    var xhr = prepareResponse(url, onSuccess, onError);
+    var xhr = prepareResponse(onSuccess, onError);
 
     xhr.open('POST', url);
     xhr.send(data);
   }
 
-  function prepareResponse(url, onSuccess, onError) {
+  function prepareResponse(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
