@@ -67,6 +67,9 @@
   var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
   var isFormActiate = false;
+  var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
+  var notice = document.querySelector('.notice');
+  var templateMessageError = document.querySelector('#error').content.querySelector('.error');
 
   onRoomOrCapacityChanged();
   onTypeHousingChanged();
@@ -79,6 +82,11 @@
 
     disableElements('.ad-form', 'fieldset', isDeactivated);
 
+    window.map.setMainPinPosition(
+        mapSection.offsetWidth / 2,
+        mapSection.offsetHeight / 2,
+        PIN_MAIN_SIZE
+    );
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
     titleInputAdForm.removeEventListener('change', onTitleChanged);
@@ -103,6 +111,7 @@
     }
 
     deactivateFields(false);
+    resetFormByButton();
 
     renderAdress(window.map.pinMain);
 
@@ -131,8 +140,8 @@
     isFormActiate = true;
   }
 
-  function renderData(generatedOffers) {
-    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
+  function renderData(generatedOffers, pinWidth, pinHeight) {
+    mapPins.appendChild(window.pin.addAdvert(generatedOffers, pinWidth, pinHeight));
   }
 
   // Функция для добавления disabled элементам
@@ -212,8 +221,6 @@
 
   // Функция для показа сообщения успешной отправки
   function showSuccessMessage() {
-    var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
-    var notice = document.querySelector('.notice');
     var messageSuccessElement = templateMessageSuccess.cloneNode(true);
 
     notice.insertBefore(messageSuccessElement, adForm);
@@ -225,6 +232,8 @@
   // Закрытие сообщения успешной отправки
   function removeSuccessMessage() {
     document.querySelector('.success').remove();
+    document.removeEventListener('keydown', onShowSuccessMessageEcsKeydown);
+    document.removeEventListener('click', onShowSuccessMessageClick);
   }
 
   // Обработчик закрытия при клике на произвольное область экрана
@@ -244,9 +253,13 @@
   }
 
   // Функция для показа сообщения об ошибке
-  function showErrorMessage(error) {
-    var templateMessageError = document.querySelector('#error').content.querySelector('.error');
-    var notice = document.querySelector('.notice');
+  function showErrorMessage(
+      error,
+      onEcsKeydownCallback,
+      onMessageClickCallback,
+      onButtonClickCallback
+  ) {
+
     var messageErrorElement = templateMessageError.cloneNode(true);
     var errorButton = messageErrorElement.querySelector('.error__button');
 
@@ -255,35 +268,61 @@
 
     notice.insertBefore(messageErrorElement, adForm);
 
-    document.addEventListener('keydown', onShowErrorMassageEcsKeydown);
-    document.addEventListener('click', onShowErrorMassageClick);
-    errorButton.addEventListener('click', onErrorButtonClick);
+    document.addEventListener('keydown', onErrorMessageEcsKeydown(errorButton, onEcsKeydownCallback));
+    document.addEventListener('click', onErrorLayoutClick(errorButton, onMessageClickCallback));
+    errorButton.addEventListener('click', onErrorButtonClick(errorButton, onButtonClickCallback));
   }
 
   // Закрытие сообщения успешной отправки
-  function removeErrorMessage() {
-    document.querySelector('.error').remove();
+  function removeErrorMessage(errorButton) {
+    var currentErrorTemplate = document.querySelector('.error');
+    if (currentErrorTemplate) {
+      currentErrorTemplate.remove();
+    }
+    document.removeEventListener('keydown', onErrorMessageEcsKeydown(errorButton));
+    document.removeEventListener('click', onErrorLayoutClick(errorButton));
+    errorButton.removeEventListener('click', onErrorButtonClick(errorButton));
   }
 
   // Обработчик закрытия при клике на произвольное область экрана
-  function onShowErrorMassageClick(evt) {
-    if (evt.target.matches('.error')) {
-      evt.preventDefault();
-      removeErrorMessage();
-    }
+  function onErrorLayoutClick(errorButton, onMessageClickCallback) {
+    return function (evt) {
+      if (evt.target.matches('.error')) {
+        evt.preventDefault();
+        removeErrorMessage(errorButton);
+        onMessageClickCallback();
+      }
+    };
   }
 
   // Обработчик закрытия модалки с сообщением при клике на Esc
-  function onShowErrorMassageEcsKeydown(evt) {
-    if (evt.key === window.map.ESCAPE_KEY) {
-      evt.preventDefault();
-      removeErrorMessage();
-    }
+  function onErrorMessageEcsKeydown(errorButton, onEcsKeydownCallback) {
+    return function (evt) {
+      if (evt.key === window.map.ESCAPE_KEY) {
+        evt.preventDefault();
+        removeErrorMessage(errorButton);
+        onEcsKeydownCallback();
+      }
+    };
   }
 
   // Функция закрытия формы после ошибки
-  function onErrorButtonClick() {
-    removeErrorMessage();
+  function onErrorButtonClick(errorButton, onButtonClickCallback) {
+    return function () {
+      removeErrorMessage(errorButton);
+      onButtonClickCallback();
+    };
+  }
+
+  function resetFormByButton() {
+    var resetButton = document.querySelector('.ad-form__reset');
+    resetButton.addEventListener('click', onResetButtonClick);
+  }
+
+  function onResetButtonClick() {
+    window.map.closeCard();
+    deactivateFields(true);
+    deactivateFilerPins(true);
   }
 
   window.form = {

@@ -2,19 +2,16 @@
 
 (function () {
 
-  var PIN_WIDTH = 50;
-  var PIN_HEIGHT = 70;
-
   // Нахождение шаблон пина
   var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   // Генерация пина объявления
-  function generateAdvertPin(offerItem) {
+  function generateAdvertPin(offerItem, pinWidth, pinHeight) {
     var elementPin = pinTemplate.cloneNode(true);
 
-    elementPin.style.left = (offerItem.location.x - PIN_WIDTH / 2) + 'px';
-    elementPin.style.top = (offerItem.location.y - PIN_HEIGHT) + 'px';
+    elementPin.style.left = (offerItem.location.x - pinWidth / 2) + 'px';
+    elementPin.style.top = (offerItem.location.y - pinHeight) + 'px';
 
     elementPin.querySelector('img').src = offerItem.author.avatar;
     elementPin.querySelector('img').alt = offerItem.offer.title;
@@ -31,12 +28,12 @@
   }
 
   // Добавление пина объявлений
-  function addAdvert(generatedOffers) {
+  function addAdvert(generatedOffers, pinWidth, pinHeight) {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < generatedOffers.length; i++) {
       if (generatedOffers[i].offer) {
-        fragment.appendChild(generateAdvertPin(generatedOffers[i]));
+        fragment.appendChild(generateAdvertPin(generatedOffers[i], pinWidth, pinHeight));
       }
     }
     return fragment;

@@ -31,7 +31,9 @@
 
     if (mapCard) {
       mapCard.remove();
-      mapPinActive.classList.remove('map__pin--active');
+      if (mapPinActive) {
+        mapPinActive.classList.remove('map__pin--active');
+      }
     }
 
     document.removeEventListener('keydown', onMapCardEcsKeydown);
@@ -44,11 +46,17 @@
     }
   }
 
+  function setMainPinPosition(positionX, positionY) {
+    mapPinMain.style.left = Math.round(positionX) + 'px';
+    mapPinMain.style.top = Math.round(positionY) + 'px';
+  }
+
   window.map = {
     pinMain: mapPinMain,
     setMousedownListener: setMousedownListener,
     setKeydownListener: setKeydownListener,
     closeCard: closeCard,
+    setMainPinPosition: setMainPinPosition,
     onMapCardEcsKeydown: onMapCardEcsKeydown,
     ESCAPE_KEY: ESCAPE_KEY
   };
