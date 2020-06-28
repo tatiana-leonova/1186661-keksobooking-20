@@ -290,7 +290,9 @@
       if (evt.target.matches('.error')) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
-        onMessageClickCallback();
+        if (onMessageClickCallback) {
+          onMessageClickCallback();
+        }
       }
     };
   }
@@ -301,7 +303,9 @@
       if (evt.key === window.map.ESCAPE_KEY) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
-        onEcsKeydownCallback();
+        if (onEcsKeydownCallback) {
+          onEcsKeydownCallback();
+        }
       }
     };
   }
@@ -310,7 +314,9 @@
   function onErrorButtonClick(errorButton, onButtonClickCallback) {
     return function () {
       removeErrorMessage(errorButton);
-      onButtonClickCallback();
+      if (onButtonClickCallback) {
+        onButtonClickCallback();
+      }
     };
   }
 
@@ -320,14 +326,20 @@
   }
 
   function onResetButtonClick() {
-    window.map.closeCard();
-    deactivateFields(true);
+    disableForm();
+  }
+
+  function disableForm() {
     deactivateFilerPins(true);
+    clearForm('.ad-form');
+    window.map.closeCard();
+    window.pin.clear();
+    deactivateFields(true);
   }
 
   window.form = {
     activatePage: activatePage,
-    clearForm: clearForm,
+    disableForm: disableForm,
     deactivateFields: deactivateFields,
     deactivateFilerPins: deactivateFilerPins,
     renderData: renderData,

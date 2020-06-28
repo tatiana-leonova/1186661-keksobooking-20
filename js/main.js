@@ -5,7 +5,7 @@
   var PIN_HEIGHT = 70;
 
   var URL_GET_REQUEST = 'https://javascript.pages.academy/keksobooking/data';
-  var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
+  var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobookingg';
 
   window.form.deactivateFields(true);
   window.form.deactivateFilerPins(true);
@@ -44,19 +44,13 @@
         URL_POST_REQUEST,
         function () {
           window.form.showSuccessMessage();
-          window.map.closeCard();
-          window.form.deactivateFields(true);
-          window.form.deactivateFilerPins(true);
+          window.form.disableForm();
         },
         function (error) {
           window.form.showErrorMessage(error);
         },
         new FormData(window.form.adForm)
     );
-    window.form.deactivateFields(true);
-    window.form.deactivateFilerPins(true);
-    window.pin.clear();
-    window.form.clearForm('.ad-form');
   });
 
 }());
