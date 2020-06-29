@@ -227,7 +227,9 @@
     resetButton.addEventListener('click', onResetButtonClick);
   }
 
-  function onResetButtonClick() {
+  function onResetButtonClick(evt) {
+    evt.preventDefault();
+    disableElements('.ad-form', 'fieldset', true);
     disableForm();
   }
 
