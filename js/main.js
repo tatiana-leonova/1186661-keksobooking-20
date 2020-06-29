@@ -25,33 +25,33 @@
           window.form.deactivateFilerPins(false);
         },
         function (error) {
-          window.messages.showErrorMessage(
+          window.messages.showError(
               error,
               function () {
-                window.form.deactivateFields(true);
+                window.form.deactivateFields();
               },
               function () {
-                window.form.deactivateFields(true);
+                window.form.deactivateFields();
               },
               function () {
-                window.form.deactivateFields(true);
+                window.form.deactivateFields();
               }
           );
         });
   }
 
-  window.form.adForm.addEventListener('submit', function (evt) {
+  window.form.advert.addEventListener('submit', function (evt) {
     evt.preventDefault();
     window.backend.uploadData(
         URL_POST_REQUEST,
         function () {
           window.messages.showSuccess();
-          window.form.disableForm();
+          window.form.disable();
         },
         function (error) {
           window.messages.showError(error);
         },
-        new FormData(window.form.adForm)
+        new FormData(window.form.advert)
     );
   });
 

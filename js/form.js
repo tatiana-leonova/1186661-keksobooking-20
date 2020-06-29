@@ -68,21 +68,17 @@
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
   var adFormSubmit = adForm.querySelector('.ad-form__submit');
   var isFormActiate = false;
-
-
-  сhangedRoomOrCapacity();
-  сhangedTypeHousing();
+  var resetButton = document.querySelector('.ad-form__reset');
 
   // Функция для деактивации страницы
   function deactivateFields() {
     isFormActiate = false;
-    mapSection.classList.add('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
-    adForm.classList.add('ad-form--disabled'); // Удаление opacity на форме
+    mapSection.classList.add('map--faded'); // Добавление "Поставь меня куда-нибудь" у пина
+    adForm.classList.add('ad-form--disabled'); // Добавление opacity на форме
 
     window.map.setMainPinPosition(
         mapSection.offsetWidth / 2,
-        mapSection.offsetHeight / 2,
-        PIN_MAIN_SIZE
+        mapSection.offsetHeight / 2
     );
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
@@ -108,6 +104,8 @@
       return;
     }
 
+    setCapacityValidity();
+    setPricePlaceholder();
     setupResetFormButton();
 
     renderAdress(window.map.pinMain);
@@ -167,7 +165,7 @@
 
 
   // Функция для валидации комнат
-  function сhangedRoomOrCapacity() {
+  function setCapacityValidity() {
     var room = countOfPlacesInRoom[roomSelectAdForm.value];
     var errorMessage = room.capacity.includes(capacitySelectAdForm.value) ? '' : room.error;
     roomSelectAdForm.setCustomValidity(errorMessage);
@@ -187,18 +185,18 @@
   }
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
-  function сhangedTypeHousing() {
+  function setPricePlaceholder() {
     var type = OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
   }
 
   function onRoomOrCapacityChanged() {
-    сhangedRoomOrCapacity();
+    setCapacityValidity();
   }
 
   function onTypeHousingChanged() {
-    сhangedTypeHousing();
+    setPricePlaceholder();
   }
 
   // Функция синхронизации Даты заезда и выезда
@@ -226,7 +224,6 @@
   }
 
   function setupResetFormButton() {
-    var resetButton = document.querySelector('.ad-form__reset');
     resetButton.addEventListener('click', onResetButtonClick);
   }
 
@@ -239,12 +236,12 @@
     deactivateFilerPins(true);
     clearForm('.ad-form');
     window.pin.clear();
-    deactivateFields(true);
+    deactivateFields();
   }
 
   window.form = {
     activatePage: activatePage,
-    disableForm: disableForm,
+    disable: disableForm,
     deactivateFields: deactivateFields,
     disableElements: disableElements,
     deactivateFilerPins: deactivateFilerPins,
@@ -252,7 +249,7 @@
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
-    adForm: adForm,
+    advert: adForm,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

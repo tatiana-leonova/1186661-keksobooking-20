@@ -4,15 +4,15 @@
   var templateMessageSuccess = document.querySelector('#success').content.querySelector('.success');
   var notice = document.querySelector('.notice');
   var templateMessageError = document.querySelector('#error').content.querySelector('.error');
-  var errorLayoutClickCallback;
-  var errorMessageEcsKeydownCallback;
-  var errorButtonClickCallback;
+  var onErrorLayoutClick;
+  var OnErrorMessageEcsKeydown;
+  var onErrorButtonClick;
 
   // Функция для показа сообщения успешной отправки
   function showSuccessMessage() {
     var messageSuccessElement = templateMessageSuccess.cloneNode(true);
 
-    notice.insertBefore(messageSuccessElement, window.form.adForm);
+    notice.insertBefore(messageSuccessElement, window.form.advert);
 
     document.addEventListener('keydown', onShowSuccessMessageEcsKeydown);
     document.addEventListener('click', onShowSuccessMessageClick);
@@ -44,9 +44,9 @@
   // Функция для показа сообщения об ошибке
   function showErrorMessage(
       error,
-      onEcsKeydownCallback,
-      onMessageClickCallback,
-      onButtonClickCallback
+      onEcsKeydown,
+      onMessageClick,
+      onButtonClick
   ) {
 
     var messageErrorElement = templateMessageError.cloneNode(true);
@@ -55,11 +55,11 @@
     var messageText = messageErrorElement.querySelector('.error__message');
     messageText.textContent = error;
 
-    notice.insertBefore(messageErrorElement, window.form.adForm);
+    notice.insertBefore(messageErrorElement, window.form.advert);
 
-    document.addEventListener('keydown', onErrorMessageEcsKeydown(errorButton, onEcsKeydownCallback));
-    document.addEventListener('click', onErrorLayoutClick(errorButton, onMessageClickCallback));
-    errorButton.addEventListener('click', onErrorButtonClick(errorButton, onButtonClickCallback));
+    document.addEventListener('keydown', getErrorMessageEcsHandler(errorButton, onEcsKeydown));
+    document.addEventListener('click', getErrorLayoutClickHandler(errorButton, onMessageClick));
+    errorButton.addEventListener('click', getErrorButtonHandler(errorButton, onButtonClick));
   }
 
   // Закрытие сообщения успешной отправки
@@ -68,48 +68,48 @@
     if (currentErrorTemplate) {
       currentErrorTemplate.remove();
     }
-    document.removeEventListener('keydown', errorMessageEcsKeydownCallback);
-    document.removeEventListener('click', errorLayoutClickCallback);
-    errorButton.removeEventListener('click', errorButtonClickCallback);
+    document.removeEventListener('keydown', OnErrorMessageEcsKeydown);
+    document.removeEventListener('click', onErrorLayoutClick);
+    errorButton.removeEventListener('click', onErrorButtonClick);
   }
 
   // Обработчик закрытия при клике на произвольное область экрана
-  function onErrorLayoutClick(errorButton, onMessageClickCallback) {
-    errorLayoutClickCallback = function (evt) {
+  function getErrorLayoutClickHandler(errorButton, onMessageClick) {
+    onErrorLayoutClick = function (evt) {
       if (evt.target.matches('.error')) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
-        if (onMessageClickCallback) {
-          onMessageClickCallback();
+        if (onMessageClick) {
+          onMessageClick();
         }
       }
     };
-    return errorLayoutClickCallback;
+    return onErrorLayoutClick;
   }
 
   // Обработчик закрытия модалки с сообщением при клике на Esc
-  function onErrorMessageEcsKeydown(errorButton, onEcsKeydownCallback) {
-    errorMessageEcsKeydownCallback = function (evt) {
+  function getErrorMessageEcsHandler(errorButton, onEcsKeydown) {
+    OnErrorMessageEcsKeydown = function (evt) {
       if (evt.key === window.map.ESCAPE_KEY) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
-        if (onEcsKeydownCallback) {
-          onEcsKeydownCallback();
+        if (onEcsKeydown) {
+          onEcsKeydown();
         }
       }
     };
-    return errorMessageEcsKeydownCallback;
+    return OnErrorMessageEcsKeydown;
   }
 
   // Функция закрытия формы после ошибки
-  function onErrorButtonClick(errorButton, onButtonClickCallback) {
-    errorButtonClickCallback = function () {
+  function getErrorButtonHandler(errorButton, onButtonClick) {
+    onErrorButtonClick = function () {
       removeErrorMessage(errorButton);
-      if (onButtonClickCallback) {
-        onButtonClickCallback();
+      if (onButtonClick) {
+        onButtonClick();
       }
     };
-    return errorButtonClickCallback;
+    return onErrorButtonClick;
   }
 
   window.messages = {
