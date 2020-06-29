@@ -28,16 +28,21 @@
           window.messages.showError(
               error,
               function () {
-                window.form.deactivateFields();
+                disableFormWhenError();
               },
               function () {
-                window.form.deactivateFields();
+                disableFormWhenError();
               },
               function () {
-                window.form.deactivateFields();
+                disableFormWhenError();
               }
           );
         });
+  }
+
+  function disableFormWhenError() {
+    window.form.deactivateFields();
+    window.form.disableElements('.ad-form', 'fieldset', true);
   }
 
   window.form.advert.addEventListener('submit', function (evt) {
