@@ -18,7 +18,7 @@
 
   function setKeydownListener(callback) {
     mapPinMain.addEventListener('keydown', function (evt) {
-      if (evt.key === ENTER_KEY) { // нажатие мышки только на левую кнопку
+      if (evt.key === ENTER_KEY) {
         callback();
       }
     });
@@ -44,12 +44,19 @@
     }
   }
 
+  function setMainPinPosition(positionX, positionY) {
+    mapPinMain.style.left = Math.round(positionX) + 'px';
+    mapPinMain.style.top = Math.round(positionY) + 'px';
+  }
+
   window.map = {
     pinMain: mapPinMain,
     setMousedownListener: setMousedownListener,
     setKeydownListener: setKeydownListener,
     closeCard: closeCard,
-    onMapCardEcsKeydown: onMapCardEcsKeydown
+    setMainPinPosition: setMainPinPosition,
+    onMapCardEcsKeydown: onMapCardEcsKeydown,
+    ESCAPE_KEY: ESCAPE_KEY
   };
 
 })();

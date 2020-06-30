@@ -66,16 +66,20 @@
   var addressInputForm = document.querySelector('input[name="address"]');
   var timeinSelectAdForm = adForm.querySelector('select[name="timein"]');
   var timeoutSelectAdForm = adForm.querySelector('select[name="timeout"]');
+  var adFormSubmit = adForm.querySelector('.ad-form__submit');
   var isFormActiate = false;
-
-  onRoomOrCapacityChanged();
-  onTypeHousingChanged();
+  var resetButton = document.querySelector('.ad-form__reset');
 
   // Функция для деактивации страницы
-  function deactivateFields(isDeactivated) {
+  function deactivateFields() {
     isFormActiate = false;
-    disableElements('.ad-form', 'fieldset', isDeactivated);
+    mapSection.classList.add('map--faded'); // Добавление "Поставь меня куда-нибудь" у пина
+    adForm.classList.add('ad-form--disabled'); // Добавление opacity на форме
 
+    window.map.setMainPinPosition(
+        mapSection.offsetWidth / 2,
+        mapSection.offsetHeight / 2
+    );
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
     titleInputAdForm.removeEventListener('change', onTitleChanged);
@@ -85,6 +89,7 @@
 
     timeoutSelectAdForm.removeEventListener('change', onTimeoutChanged);
     timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
+    adFormSubmit.removeEventListener('click', onFormSubmitClick);
   }
 
   // Функция деактивации фильтрации пинов
@@ -99,7 +104,9 @@
       return;
     }
 
-    deactivateFields(false);
+    setCapacityValidity();
+    setPricePlaceholder();
+    setupResetFormButton();
 
     renderAdress(window.map.pinMain);
 
@@ -115,21 +122,22 @@
     mapSection.classList.remove('map--faded'); // Удаление "Поставь меня куда-нибудь" у пина
     adForm.classList.remove('ad-form--disabled'); // Удаление opacity на форме
 
-    function validateFormFields(formFields) {
-      formFields.forEach(function (item) {
-        item.classList.toggle('error-form', !item.validity.valid);
-      });
-    }
-
-    var adFormSubmit = adForm.querySelector('.ad-form__submit');
-    adFormSubmit.addEventListener('click', function () {
-      validateFormFields(adForm.querySelectorAll('input, select'));
-    });
+    adFormSubmit.addEventListener('click', onFormSubmitClick);
     isFormActiate = true;
   }
 
-  function renderData(generatedOffers) {
-    mapPins.appendChild(window.pin.addAdvert(generatedOffers));
+  function validateFormFields(formFields) {
+    formFields.forEach(function (item) {
+      item.classList.toggle('error-form', !item.validity.valid);
+    });
+  }
+
+  function onFormSubmitClick() {
+    validateFormFields(adForm.querySelectorAll('input, select'));
+  }
+
+  function renderData(generatedOffers, pinWidth, pinHeight) {
+    mapPins.appendChild(window.pin.addAdvert(generatedOffers, pinWidth, pinHeight));
   }
 
   // Функция для добавления disabled элементам
@@ -157,7 +165,7 @@
 
 
   // Функция для валидации комнат
-  function onRoomOrCapacityChanged() {
+  function setCapacityValidity() {
     var room = countOfPlacesInRoom[roomSelectAdForm.value];
     var errorMessage = room.capacity.includes(capacitySelectAdForm.value) ? '' : room.error;
     roomSelectAdForm.setCustomValidity(errorMessage);
@@ -177,10 +185,18 @@
   }
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
-  function onTypeHousingChanged() {
+  function setPricePlaceholder() {
     var type = OFFER_TYPES[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
+  }
+
+  function onRoomOrCapacityChanged() {
+    setCapacityValidity();
+  }
+
+  function onTypeHousingChanged() {
+    setPricePlaceholder();
   }
 
   // Функция синхронизации Даты заезда и выезда
@@ -201,14 +217,41 @@
     }
   }
 
+  // Функция для очистки формы
+  function clearForm(form) {
+    var formElement = document.querySelector(form);
+    formElement.reset();
+  }
+
+  function setupResetFormButton() {
+    resetButton.addEventListener('click', onResetButtonClick);
+  }
+
+  function onResetButtonClick(evt) {
+    evt.preventDefault();
+    disableElements('.ad-form', 'fieldset', true);
+    disableForm();
+  }
+
+  function disableForm() {
+    window.map.closeCard();
+    deactivateFilerPins(true);
+    clearForm('.ad-form');
+    window.pin.clear();
+    deactivateFields();
+  }
+
   window.form = {
     activatePage: activatePage,
+    disable: disableForm,
     deactivateFields: deactivateFields,
+    disableElements: disableElements,
     deactivateFilerPins: deactivateFilerPins,
     renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
+    advert: adForm,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

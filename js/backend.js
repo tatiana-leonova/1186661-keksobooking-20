@@ -7,6 +7,20 @@
   };
 
   function loadData(url, onSuccess, onError) {
+    var xhr = prepareResponse(onSuccess, onError);
+    xhr.open('GET', url);
+
+    xhr.send();
+  }
+
+  function uploadData(url, onSuccess, onError, data) {
+    var xhr = prepareResponse(onSuccess, onError);
+
+    xhr.open('POST', url);
+    xhr.send(data);
+  }
+
+  function prepareResponse(onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -26,14 +40,12 @@
     xhr.addEventListener('timeout', function () {
       onError('Запрос не успел выполниться за ' + TIMEOUT_IN_MILIS + ' мс');
     });
-
-    xhr.open('GET', url);
-
-    xhr.send();
+    return xhr;
   }
 
   window.backend = {
-    loadData: loadData
+    loadData: loadData,
+    uploadData: uploadData
   };
 
 }());
