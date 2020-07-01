@@ -28,8 +28,8 @@
 
     cardElement.querySelector('.popup__title').textContent = offerItem.offer.title;
     cardElement.querySelector('.popup__text--address').textContent = offerItem.offer.address;
-    cardElement.querySelector('.popup__text--price').textContent = offerItem.offer.price + '₽/ночь';
-    cardElement.querySelector('.popup__type').textContent = offerItem.offer.type.translate;
+    cardElement.querySelector('.popup__text--price').textContent = offerItem.offer.price + ' ₽/ночь';
+    cardElement.querySelector('.popup__type').textContent = window.form.OFFER_TYPES[offerItem.offer.type].translate;
     cardElement.querySelector('.popup__text--capacity').textContent = renderRooms(offerItem.offer.rooms) + ' для ' + renderGuests(offerItem.offer.guests);
     cardElement.querySelector('.popup__text--time').textContent = 'Заезд после ' + offerItem.offer.checkin + ', выезд до ' + offerItem.offer.checkout;
     cardElement.querySelector('.popup__description').textContent = offerItem.offer.description;

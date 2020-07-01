@@ -5,7 +5,7 @@
   var notice = document.querySelector('.notice');
   var templateMessageError = document.querySelector('#error').content.querySelector('.error');
   var onErrorLayoutClick;
-  var OnErrorMessageEcsKeydown;
+  var onErrorMessageEcsKeydown;
   var onErrorButtonClick;
 
   // Функция для показа сообщения успешной отправки
@@ -68,7 +68,7 @@
     if (currentErrorTemplate) {
       currentErrorTemplate.remove();
     }
-    document.removeEventListener('keydown', OnErrorMessageEcsKeydown);
+    document.removeEventListener('keydown', onErrorMessageEcsKeydown);
     document.removeEventListener('click', onErrorLayoutClick);
     errorButton.removeEventListener('click', onErrorButtonClick);
   }
@@ -89,7 +89,7 @@
 
   // Обработчик закрытия модалки с сообщением при клике на Esc
   function getErrorMessageEcsHandler(errorButton, onEcsKeydown) {
-    OnErrorMessageEcsKeydown = function (evt) {
+    onErrorMessageEcsKeydown = function (evt) {
       if (evt.key === window.map.ESCAPE_KEY) {
         evt.preventDefault();
         removeErrorMessage(errorButton);
@@ -98,7 +98,7 @@
         }
       }
     };
-    return OnErrorMessageEcsKeydown;
+    return onErrorMessageEcsKeydown;
   }
 
   // Функция закрытия формы после ошибки

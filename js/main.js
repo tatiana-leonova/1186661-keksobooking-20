@@ -3,6 +3,7 @@
 (function () {
   var PIN_WIDTH = 50;
   var PIN_HEIGHT = 70;
+  var MAX_COUNT_OFFER = 5;
 
   var URL_GET_REQUEST = 'https://javascript.pages.academy/keksobooking/data';
   var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
@@ -21,7 +22,10 @@
     window.backend.loadData(
         URL_GET_REQUEST,
         function (response) {
-          window.form.renderData(response, PIN_WIDTH, PIN_HEIGHT);
+          prepareData(response);
+          window.filter.setup(function () {
+            prepareData(response);
+          });
           window.form.deactivateFilerPins(false);
         },
         function (error) {
@@ -38,6 +42,11 @@
               }
           );
         });
+  }
+
+  function prepareData(offers) {
+    var filterOffers = window.filter.offers(offers, window.filter.checkTypeHousing, MAX_COUNT_OFFER);
+    window.form.renderData(filterOffers, PIN_WIDTH, PIN_HEIGHT);
   }
 
   function disableFormWhenError() {
