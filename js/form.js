@@ -252,6 +252,7 @@
     mapSection: mapSection,
     mapPins: mapPins,
     advert: adForm,
+    OFFER_TYPES: OFFER_TYPES,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 
