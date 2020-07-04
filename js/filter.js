@@ -26,7 +26,9 @@
     }
   };
 
-  var filters = [checkHousingType, checkHousingPrice, checkHousingRoom, checkHousingGuest];
+  var housingFeatures = document.querySelector('.map__features').querySelectorAll('input');
+
+  var filters = [checkHousingType, checkHousingPrice, checkHousingRoom, checkHousingGuest, checkFeatures];
 
   function setupFilters(updatePins) {
     mapFilters.addEventListener('change', getFilterChanged(updatePins));
@@ -82,6 +84,13 @@
   function checkFilters(element) {
     return filters.every(function (filter) {
       return filter(element);
+    });
+  }
+
+  function checkFeatures(element) {
+    var housingFeaturesArray = Array.from(housingFeatures);
+    return housingFeaturesArray.every(function (feature) {
+      return !feature.checked || element.offer.features.includes(feature.value);
     });
   }
 
