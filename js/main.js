@@ -45,7 +45,7 @@
   }
 
   function prepareData(offers) {
-    var filterOffers = window.filter.offers(offers, window.filter.checkTypeHousing, MAX_COUNT_OFFER);
+    var filterOffers = window.filter.offers(offers, window.filter.check, MAX_COUNT_OFFER);
     window.form.renderData(filterOffers, PIN_WIDTH, PIN_HEIGHT);
   }
 
