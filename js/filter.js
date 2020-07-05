@@ -14,11 +14,11 @@
   var priceHousingSegment = {
     'middle': {
       min: 10000,
-      max: 49999
+      max: 50000
     },
     'low': {
       min: 0,
-      max: 9999
+      max: 10000
     },
     'high': {
       min: 50000,
@@ -63,12 +63,9 @@
   }
 
   function checkHousingPrice(element) {
-    if (housingPriceSelect.value === DEFAULT_VALUE_TYPE) {
-      return DEFAULT_VALUE_TYPE;
-    } else {
-      return priceHousingSegment[housingPriceSelect.value].min <= element.offer.price &&
-    priceHousingSegment[housingPriceSelect.value].max >= element.offer.price;
-    }
+    return housingPriceSelect.value === DEFAULT_VALUE_TYPE ||
+     (priceHousingSegment[housingPriceSelect.value].min <= element.offer.price &&
+    priceHousingSegment[housingPriceSelect.value].max > element.offer.price);
   }
 
   function checkHousingRoom(element) {
@@ -88,8 +85,8 @@
   }
 
   function checkFeatures(element) {
-    var housingFeaturesArray = Array.from(housingFeatures);
-    return housingFeaturesArray.every(function (feature) {
+    var housingFeaturesAfterConvert = Array.from(housingFeatures);
+    return housingFeaturesAfterConvert.every(function (feature) {
       return !feature.checked || element.offer.features.includes(feature.value);
     });
   }

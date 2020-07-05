@@ -2,9 +2,9 @@
 
 (function () {
   var DEBOUNCE_INTERVAL_IN_MILLIS = 500;
+  var lastTimeout = null;
 
   function executeWithDebounce(callback) {
-    var lastTimeout = null;
     var parameters = arguments;
     if (lastTimeout) {
       window.clearTimeout(lastTimeout);
