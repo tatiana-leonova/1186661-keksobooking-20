@@ -3,7 +3,7 @@
 (function () {
   var DEBOUNCE_INTERVAL_IN_MILLIS = 500;
 
-  function executeWithDebounce(callback) {
+  window.debounce = function (callback) {
     var lastTimeout = null;
 
     return function () {
@@ -15,9 +15,5 @@
         callback.apply(null, parameters);
       }, DEBOUNCE_INTERVAL_IN_MILLIS);
     };
-  }
-
-  window.debounce = {
-    execute: executeWithDebounce
   };
 })();
