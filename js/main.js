@@ -51,7 +51,7 @@
     window.filter.setup(function () {
       window.debounce.execute(function () {
         prepareData(response);
-      });
+      })();
     });
   }
 
