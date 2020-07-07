@@ -222,6 +222,7 @@
   function clearForm(form) {
     var formElement = document.querySelector(form);
     formElement.reset();
+    window.photos.clear();
   }
 
   function setupResetFormButton() {
