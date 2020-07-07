@@ -71,25 +71,26 @@
   var resetButton = document.querySelector('.ad-form__reset');
 
   // Функция для деактивации страницы
-  function deactivateFields() {
+  function deactivateFields(isError) {
     isFormActiate = false;
     mapSection.classList.add('map--faded'); // Добавление "Поставь меня куда-нибудь" у пина
-    adForm.classList.add('ad-form--disabled'); // Добавление opacity на форме
-
     window.map.setMainPinPosition(
         mapSection.offsetWidth / 2,
         mapSection.offsetHeight / 2
     );
     renderAdress(window.map.pinMain, PIN_MAIN_SIZE, PIN_MAIN_SIZE / 2);
 
-    titleInputAdForm.removeEventListener('change', onTitleChanged);
-    roomSelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
-    capacitySelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
-    typeHousingSelectAdForm.removeEventListener('change', onTypeHousingChanged);
+    if (!isError) {
+      adForm.classList.add('ad-form--disabled'); // Добавление opacity на форме
+      titleInputAdForm.removeEventListener('change', onTitleChanged);
+      roomSelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
+      capacitySelectAdForm.removeEventListener('change', onRoomOrCapacityChanged);
+      typeHousingSelectAdForm.removeEventListener('change', onTypeHousingChanged);
 
-    timeoutSelectAdForm.removeEventListener('change', onTimeoutChanged);
-    timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
-    adFormSubmit.removeEventListener('click', onFormSubmitClick);
+      timeoutSelectAdForm.removeEventListener('change', onTimeoutChanged);
+      timeinSelectAdForm.removeEventListener('change', onTimeinChanged);
+      adFormSubmit.removeEventListener('click', onFormSubmitClick);
+    }
   }
 
   // Функция деактивации фильтрации пинов
