@@ -48,11 +48,11 @@
   }
 
   function setupPinUpdating(response) {
-    var onStartDebounce = window.debounce(function () {
+    var prepareDebounceData = window.debounce(function () {
       prepareData(response);
     });
     window.filter.setup(function () {
-      onStartDebounce();
+      prepareDebounceData();
     });
   }
 
