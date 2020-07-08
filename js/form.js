@@ -96,6 +96,7 @@
   // Функция деактивации фильтрации пинов
   function deactivateFilterPins(isDeactivated) {
     disableElements('.map__filters', 'select', isDeactivated);
+    resetSelects('.map__filters', 'select');
     disableElements('.map__filters', 'fieldset', isDeactivated);
   }
 
@@ -147,6 +148,15 @@
     var childElements = parentElement.querySelectorAll(children);
     childElements.forEach(function (item) {
       item.disabled = isDisabled;
+    });
+  }
+
+  // Функция для сброса дефолтных значений в фильтре
+  function resetSelects(parent, children) {
+    var parentElement = document.querySelector(parent);
+    var childElements = parentElement.querySelectorAll(children);
+    childElements.forEach(function (item) {
+      item.selectedIndex = 0;
     });
   }
 
@@ -240,6 +250,7 @@
     clearForm('.ad-form');
     window.pin.clear();
     deactivateFields();
+    priceInputAdForm.placeholder = OFFER_TYPES[typeHousingSelectAdForm.value].minPrice;
   }
 
   window.form = {

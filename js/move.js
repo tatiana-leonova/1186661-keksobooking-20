@@ -51,12 +51,13 @@
     var currentY = window.map.pinMain.offsetTop - shift.y;
 
     // Проверка границ перемещения пина
-    var maxX = window.form.mapPins.clientWidth - window.map.pinMain.clientWidth;
+    var minX = window.map.pinMain.clientWidth / -2;
+    var maxX = window.form.mapPins.clientWidth - window.map.pinMain.clientWidth / 2;
     var minY = LOCATION_Y_MIN - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
     var maxY = LOCATION_Y_MAX - window.form.PIN_MAIN_HEIGHT_WITH_CORNER;
 
     if (currentX < 0) {
-      currentX = 0;
+      currentX = minX;
     } else if (currentX > maxX) {
       currentX = maxX;
     }
