@@ -3,16 +3,15 @@
 (function () {
 
   var FILE_TYPES_IMG = ['gif', 'jpg', 'jpeg', 'png'];
+  var DEFOLT_URL_AVATAR = 'img/muffin-grey.svg';
+  var IMG_SIZE_PHOTO_HOUSING = 70;
+  var MAX_PHOTO_COUNT = 3;
+  var photoCount = 0;
 
   var avatarFileChooser = document.querySelector('.ad-form__field input[type=file]');
   var photoHousingFileChooser = document.querySelector('.ad-form__upload input[type=file]');
   var avatarPreview = document.querySelector('.ad-form-header__preview img');
   var formPhoto = document.querySelector('.ad-form__photo');
-
-  var IMG_SIZE_PHOTO_HOUSING = 70;
-  var MAX_PHOTO_COUNT = 3;
-  var photoCount = 0;
-  var DEFOLT_URL_AVATAR = 'img/muffin-grey.svg';
 
   avatarFileChooser.addEventListener('change', onAvatarFileChooserCanged);
   photoHousingFileChooser.addEventListener('change', onPhotoHousingChooserCanged);

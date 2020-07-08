@@ -10,7 +10,7 @@
 
   window.form.deactivateFields();
   window.form.disableElements('.ad-form', 'fieldset', true);
-  window.form.deactivateFilerPins(true);
+  window.form.deactivateFilterPins(true);
 
   window.map.setMousedownListener(activatePage);
 
@@ -24,7 +24,7 @@
         function (response) {
           prepareData(response);
           setupPinUpdating(response);
-          window.form.deactivateFilerPins(false);
+          window.form.deactivateFilterPins(false);
         },
         function (error) {
           window.messages.showError(

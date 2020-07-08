@@ -94,7 +94,7 @@
   }
 
   // Функция деактивации фильтрации пинов
-  function deactivateFilerPins(isDeactivated) {
+  function deactivateFilterPins(isDeactivated) {
     disableElements('.map__filters', 'select', isDeactivated);
     disableElements('.map__filters', 'fieldset', isDeactivated);
   }
@@ -163,7 +163,6 @@
     var positionY = Math.round(pin.offsetTop + mapHeight);
     return positionX + ', ' + positionY;
   }
-
 
   // Функция для валидации комнат
   function setCapacityValidity() {
@@ -237,7 +236,7 @@
 
   function disableForm() {
     window.map.closeCard();
-    deactivateFilerPins(true);
+    deactivateFilterPins(true);
     clearForm('.ad-form');
     window.pin.clear();
     deactivateFields();
@@ -248,7 +247,7 @@
     disable: disableForm,
     deactivateFields: deactivateFields,
     disableElements: disableElements,
-    deactivateFilerPins: deactivateFilerPins,
+    deactivateFilterPins: deactivateFilterPins,
     renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,

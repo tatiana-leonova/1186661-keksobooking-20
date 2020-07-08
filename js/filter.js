@@ -36,8 +36,8 @@
 
   function getFilterChanged(updatePins) {
     onFilterChanged = function () {
-      window.map.closeCard(); // закрываем карточки объявлений
-      window.pin.clear(); // очищаем пины
+      window.map.closeCard();
+      window.pin.clear();
       updatePins();
     };
     return onFilterChanged;
@@ -90,7 +90,6 @@
       return !feature.checked || element.offer.features.includes(feature.value);
     });
   }
-
 
   window.filter = {
     offers: filterOffers,
