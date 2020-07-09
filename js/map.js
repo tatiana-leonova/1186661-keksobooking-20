@@ -9,7 +9,7 @@
 
   function setMousedownListener(callback) {
     mapPinMain.addEventListener('mousedown', function (evt) {
-      if (event.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
+      if (evt.which === LEFT_KEY_MOUSE_CODE) { // нажатие мышки только на левую кнопку
         callback();
       }
       evt.preventDefault();
