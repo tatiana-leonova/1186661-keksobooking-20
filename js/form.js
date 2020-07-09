@@ -36,7 +36,7 @@
     }
   };
 
-  var OFFER_TYPES = {
+  var offerTypes = {
     'bungalo': {
       translate: 'Бунгало',
       minPrice: 0
@@ -69,6 +69,7 @@
   var adFormSubmit = adForm.querySelector('.ad-form__submit');
   var isFormActiate = false;
   var resetButton = document.querySelector('.ad-form__reset');
+  var fieldsForm = adForm.querySelectorAll('input, select');
 
   // Функция для деактивации страницы
   function deactivateFields(isError) {
@@ -95,9 +96,9 @@
 
   // Функция деактивации фильтрации пинов
   function deactivateFilterPins(isDeactivated) {
-    disableElements('.map__filters', 'select', isDeactivated);
+    disableNodes('.map__filters', 'select', isDeactivated);
     resetSelects('.map__filters', 'select');
-    disableElements('.map__filters', 'fieldset', isDeactivated);
+    disableNodes('.map__filters', 'fieldset', isDeactivated);
   }
 
   // Функция для активации страницы
@@ -135,7 +136,7 @@
   }
 
   function onFormSubmitClick() {
-    validateFormFields(adForm.querySelectorAll('input, select'));
+    validateFormFields(fieldsForm);
   }
 
   function renderData(generatedOffers, pinWidth, pinHeight) {
@@ -143,7 +144,7 @@
   }
 
   // Функция для добавления disabled элементам
-  function disableElements(parent, children, isDisabled) {
+  function disableNodes(parent, children, isDisabled) {
     var parentElement = document.querySelector(parent);
     var childElements = parentElement.querySelectorAll(children);
     childElements.forEach(function (item) {
@@ -161,9 +162,9 @@
   }
 
   // Функция для отрисовки адреса
-  function renderAdress(pin, mapWidth, mapHeight) {
-    var width = mapWidth || PIN_MAIN_SIZE;
-    var height = mapHeight || PIN_MAIN_HEIGHT_WITH_CORNER;
+  function renderAdress(pin, pinWidth, pinHeight) {
+    var width = pinWidth || PIN_MAIN_SIZE;
+    var height = pinHeight || PIN_MAIN_HEIGHT_WITH_CORNER;
     addressInputForm.value = getPositionPin(pin, width, height);
   }
 
@@ -196,7 +197,7 @@
 
   // Функция для генерации минимальной цены за ночь относительно выбранного Типа жилья
   function setPricePlaceholder() {
-    var type = OFFER_TYPES[typeHousingSelectAdForm.value];
+    var type = offerTypes[typeHousingSelectAdForm.value];
     priceInputAdForm.placeholder = type.minPrice;
     priceInputAdForm.min = type.minPrice;
   }
@@ -240,7 +241,7 @@
 
   function onResetButtonClick(evt) {
     evt.preventDefault();
-    disableElements('.ad-form', 'fieldset', true);
+    disableNodes('.ad-form', 'fieldset', true);
     disableForm();
   }
 
@@ -250,21 +251,21 @@
     clearForm('.ad-form');
     window.pin.clear();
     deactivateFields();
-    priceInputAdForm.placeholder = OFFER_TYPES[typeHousingSelectAdForm.value].minPrice;
+    setPricePlaceholder();
   }
 
   window.form = {
     activatePage: activatePage,
     disable: disableForm,
     deactivateFields: deactivateFields,
-    disableElements: disableElements,
+    disableNodes: disableNodes,
     deactivateFilterPins: deactivateFilterPins,
     renderData: renderData,
     renderAdress: renderAdress,
     mapSection: mapSection,
     mapPins: mapPins,
     advert: adForm,
-    OFFER_TYPES: OFFER_TYPES,
+    offerTypes: offerTypes,
     PIN_MAIN_HEIGHT_WITH_CORNER: PIN_MAIN_HEIGHT_WITH_CORNER
   };
 

@@ -9,7 +9,7 @@
   var URL_POST_REQUEST = 'https://javascript.pages.academy/keksobooking';
 
   window.form.deactivateFields();
-  window.form.disableElements('.ad-form', 'fieldset', true);
+  window.form.disableNodes('.ad-form', 'fieldset', true);
   window.form.deactivateFilterPins(true);
 
   window.map.setMousedownListener(activatePage);
@@ -18,7 +18,7 @@
 
   function activatePage() {
     window.form.activatePage();
-    window.form.disableElements('.ad-form', 'fieldset', false);
+    window.form.disableNodes('.ad-form', 'fieldset', false);
     window.backend.loadData(
         URL_GET_REQUEST,
         function (response) {
