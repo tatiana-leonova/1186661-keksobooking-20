@@ -2,13 +2,15 @@
 
 (function () {
   var TIMEOUT_IN_MILIS = 10000;
+  var REQUEST_GET = 'GET';
+  var REQUEST_POST = 'POST';
   var StatusCode = {
     OK: 200,
   };
 
   function loadData(url, onSuccess, onError) {
     var xhr = prepareResponse(onSuccess, onError);
-    xhr.open('GET', url);
+    xhr.open(REQUEST_GET, url);
 
     xhr.send();
   }
@@ -16,7 +18,7 @@
   function uploadData(url, onSuccess, onError, data) {
     var xhr = prepareResponse(onSuccess, onError);
 
-    xhr.open('POST', url);
+    xhr.open(REQUEST_POST, url);
     xhr.send(data);
   }
 

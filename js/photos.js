@@ -3,7 +3,7 @@
 (function () {
 
   var FILE_TYPES_IMG = ['gif', 'jpg', 'jpeg', 'png'];
-  var DEFOLT_URL_AVATAR = 'img/muffin-grey.svg';
+  var DEFAULT_URL_AVATAR = 'img/muffin-grey.svg';
   var IMG_SIZE_PHOTO_HOUSING = 70;
   var MAX_PHOTO_COUNT = 3;
   var photoCount = 0;
@@ -32,7 +32,7 @@
     formPhoto.querySelectorAll('img').forEach(function (img) {
       img.remove();
     });
-    avatarPreview.src = DEFOLT_URL_AVATAR;
+    avatarPreview.src = DEFAULT_URL_AVATAR;
   }
 
   function createImg() {
